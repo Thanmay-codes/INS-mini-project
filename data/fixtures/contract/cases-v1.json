@@ -1,0 +1,478 @@
+{
+  "fixture_version": 1,
+  "warning": "Public schema/cryptography/time examples only, not measured HTTP results. Cases exclude replay-store state.",
+  "cases": [
+    {
+      "name": "valid_resource",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 200
+    },
+    {
+      "name": "authenticator_skew_inclusive",
+      "purpose": "resource",
+      "now": 1700000030,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 200
+    },
+    {
+      "name": "authenticator_skew_outside",
+      "purpose": "resource",
+      "now": 1700000031,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "authenticator_skew"
+    },
+    {
+      "name": "ticket_expiry_leeway_inclusive",
+      "purpose": "resource",
+      "now": 1700000330,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000330,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "lVdC6SlcSEC79YIscdYTUrUVHqLcT2XevRMloM3XilU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 200
+    },
+    {
+      "name": "ticket_expiry_leeway_outside",
+      "purpose": "resource",
+      "now": 1700000331,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000331,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "v3MLyknNlMHuOHobrUXjg5KG5AIL5lfQE9C28Mzfpzw="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "ticket_expired"
+    },
+    {
+      "name": "ticket_not_before_leeway_inclusive",
+      "purpose": "resource",
+      "now": 1699999970,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1699999970,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "7yXFk3YkjG3Tf0atV0BnJvcZOvAs0sNO9ABCWLI40cQ="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 200
+    },
+    {
+      "name": "ticket_not_before_leeway_outside",
+      "purpose": "resource",
+      "now": 1699999969,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1699999969,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "kn0qHHdH6iblV2mSXQBu00cmtoAj5l2p1tfCVxJxFAQ="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "ticket_not_yet_valid"
+    },
+    {
+      "name": "boolean_timestamp",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": true,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 400
+    },
+    {
+      "name": "unknown_request_field",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        },
+        "unexpected": 1
+      },
+      "expected_http": 400
+    },
+    {
+      "name": "unsupported_version",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 2,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 400
+    },
+    {
+      "name": "bad_nonce_encoding",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "BAD",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 400
+    },
+    {
+      "name": "float_timestamp",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000.0,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 400
+    },
+    {
+      "name": "wrong_endpoint_binding",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/service-ticket",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "bad_context"
+    },
+    {
+      "name": "changed_mac",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "D2UElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "bad_integrity"
+    },
+    {
+      "name": "changed_ciphertext",
+      "purpose": "resource",
+      "now": 1700000000,
+      "request": {
+        "version": 1,
+        "service_ticket": {
+          "version": 1,
+          "kind": "service",
+          "nonce": "jI2Oj5CRkpOUlZaX",
+          "ciphertext": "DmUElPdfS5YrPiSi9K1vDFOOUD+Pu9LptiVVneM0YWAM1O1lIJei3WSRciOBESLo8umk7kkIuOkd9pu6+KmMIA72Yup9f+yXv11feeQSaYt/JrLmzAA8lTBKMT8DjuasyPPwstELn5ZDkCpk7AZgCI5ZD2XF0EvLBi0nTJj65xRyUKwpzp5UZQZPbgcqYd4wFABciYCMnTZAFBYlmOS8WK+SaDulxBjrtJFfa3JMpv29lMfJSQ+feRcWH5YmwS6ckhrxWQ6EnlMXVqWScj5VDv55xGKsCaH4w7ciGMJ8s4+RTC6FByRTO04WQS97bjTYTVqHO5kU2N9CWWan7tnx2SxQcKdF4L5vnrA="
+        },
+        "authenticator": {
+          "version": 1,
+          "client_id": "alice",
+          "service_id": "files",
+          "ticket_id": "22222222222222222222222222222222",
+          "timestamp": 1700000000,
+          "request_nonce": "44444444444444444444444444444444",
+          "method": "POST",
+          "path": "/access-resource",
+          "body_sha256": "c866742044b24fabbf3728b5cec4627d06c8998d669f174de4b08476020db196",
+          "ticket_sha256": "0da222af4a73eafa3bf7107c5169ba9ff26519316654fa3b59d687085fa7a47d",
+          "mac": "hqi/FtA745qYM6o6M6PckvMC8B3quTKXeo42VhOF2fU="
+        },
+        "body": {
+          "operation": "increment"
+        }
+      },
+      "expected_http": 401,
+      "expected_reason": "bad_integrity"
+    }
+  ]
+}
