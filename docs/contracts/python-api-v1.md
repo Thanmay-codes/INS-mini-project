@@ -1,6 +1,6 @@
 # Python API and runtime contract v1
 
-Status: planned signatures for A02/A03, not existing imports. Read [protocol-v1.md](protocol-v1.md) for validation/encoding/time behavior. Python 3.11+; use installed Flask/cryptography and the standard library. No extra dependency is required by this contract.
+Status: shared A02/A03 APIs implemented and released in G1; B01/A04 app factories are merged. A05 integrates the launcher and awaits merge/G2 verification. Read [protocol-v1.md](protocol-v1.md) for validation/encoding/time behavior. Python 3.11+; use installed Flask/cryptography and the standard library. No extra dependency is required by this contract.
 
 ## Common types and errors
 
@@ -143,8 +143,8 @@ Run directory must be new/nonexistent; create with restricted permissions where 
 
 ## App factories and local process controls
 
-Future `kdc.app.create_app(settings: Settings, *, clock: Clock | None = None) -> Flask` and `resource_server.app.create_app(...)` require settings and load validated material/state at startup. Injected Clock overrides make_clock(settings) in tests. Existing scaffold factories are migrated in B01/A04, not A01. No supplied settings means Python TypeError; invalid material/state fails startup before serving.
+`kdc.app.create_app(settings: Settings, *, clock: Clock | None = None) -> Flask` and `resource_server.app.create_app(...)` require settings and load validated material/state at startup. Injected Clock overrides make_clock(settings) in tests. Factories were implemented in B01/A04; A01 originally specified their interface. No supplied settings means Python TypeError; invalid material/state fails startup before serving.
 
-Each app main supports required `--run-dir PATH`, optional `--config PATH`, `--port INT`, `--clock-offset-seconds INT`, `--frozen-time-seconds INT`; resource additionally `--defense-mode MODE`. KDC rejects that last option. Loopback host fixed, debug/reloader off. Factory clock injection supplies test changes; live process changes require an explicit new process setting/restart. Planned A05 launcher: `--run-dir`, optional `--config`, `--kdc-port`/`--resource-port`, role-specific offset and frozen-time flags, resource defense mode; starts child modules and stops both on interruption/error. The launcher forwards options using argv arrays, never shell interpolation. B03 may start resource modules on distinct ports sharing the same run directory/store and service key; no HTTP time-control endpoints.
+Each app main supports required `--run-dir PATH`, optional `--config PATH`, `--port INT`, `--clock-offset-seconds INT`, `--frozen-time-seconds INT`; resource additionally `--defense-mode MODE`. KDC rejects that last option. Loopback host fixed, debug/reloader off. Factory clock injection supplies test changes; live process changes require an explicit new process setting/restart. A05 launcher (release tracked in the gate ledger): `--run-dir`, optional `--config`, `--kdc-port`/`--resource-port`, role-specific offset and frozen-time flags, resource defense mode; starts child modules and stops both on interruption/error. The launcher forwards options using argv arrays, never shell interpolation. B03 may start resource modules on distinct ports sharing the same run directory/store and service key; no HTTP time-control endpoints.
 
 B owns client APIs/CLI, but its health invocation remains `python -m kerberos_lab.client` in the initial scaffold; B02 must preserve/document an equivalent health command before replacing that default. Client transport/capture APIs are documented by B02 using these wire objects and the shared signing helper.
