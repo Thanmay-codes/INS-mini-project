@@ -31,20 +31,42 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-Implemented and previously smoke-checked: Python package, local `.venv`, dependency snapshot, KDC and resource-server Flask starters exposing only `/health`, health client, and launcher. Project folders, detailed plans, ownership, paper folders, and Git handoff files are prepared.
+A01–A03 are merged and G1 shared core is released against verified main commit
+`20efbae763774af69337e6c97d3b0f29f9ba5092` (PR #3 merge, 21 November 2026).
+The release record is prepared locally on `work/g1-release` for human publication.
 
-Prepared workflow: 22 individual task prompts, static ownership/dependency registry, unreleased gate ledger, role-specific handoff locations, scientific-content separation and a local advisory scope checker. The role prompts are ready to hand to agents after the preparation commit is pushed/cloned. They are instructions, not completed implementation. The first tasks are A01, B00, C01 and D01; B's KDC implementation waits for G1 (A01–A03 merged/tested).
+Implemented: frozen v1 protocol/Python contracts and independent fixtures; strict
+models/JSON/settings/logical clocks; AES-GCM tickets, session-key request MACs,
+Scrypt password verification and bounded service-key derivation; persistent
+SQLite replay stores with atomic counters, capacity limits and fail-closed state;
+private role-specific material loading and new-run initialization CLI. See
+`docs/contracts/setup-v1.md` and A01–A03 handoffs for APIs, commands and limits.
+The existing KDC/resource HTTP apps still expose scaffold health behavior.
 
-Four additional optional lightweight helper prompts are in `docs/prompts/A/cheap-tasks.md`. They audit contract fixtures, add bounded clock tests, inventory measurements and check approved drafts; A retains security/scientific approval. Workflow validation checked all 22 task files, acyclic prerequisites, allowed output paths, disjoint role-boundary probes and local links. The scope-checker CLI passed disposable-repository checks for allowed untracked/staged edits, shared-file rejection, cross-owner move rejection and fixed-base enforcement. These are workflow checks, not authentication or experiment results.
+On the merged main SHA, 134 tests passed, independent contract fixture verification
+passed and pip dependency checks were clean. Tests include real SQLite files,
+concurrent child processes, ordinary exit/reopen, rollback, contention and setup
+CLI. These establish shared-helper behavior, not HTTP security or measured paper
+results. Power-loss durability and hostile local filesystem rollback are not
+established. No runtime secrets were committed.
 
-Not implemented: identity initialization, ticket encryption, login, TGS issuance, authenticated requests, protected resource, replay cache, clock injection, attack runners, measurements, plots, protocol tests, and manuscript results. Configuration examples describe future interfaces; no loader exists yet. No scientific measurements exist.
+Not implemented: AS/login and TGS endpoints, protected resource wiring, complete
+legitimate client journey, full-flow integration, attack runners, measurements,
+plots and manuscript results. A04/B01 must connect authentication to replay-store
+transactions; stateless MAC verification alone does not reject repeats.
 
-Local Git was initialized on `main`, with `origin` set to `https://github.com/Thanmay-codes/INS-mini-project.git`. No commit, push, remote creation or successful authentication was performed. Inspect `git status` and `git remote -v` for current state before the next Git operation.
-
-Preparation checks passed: 26 required directories exist; local Markdown links resolve; package/configuration TOML and the header-only result CSV parse; private/environment/raw-log paths are ignored while plans and reviewed-evidence folders remain visible to Git. These checks validate preparation, not protocol security.
+The 22-task workflow, ownership boundaries and optional lightweight helper prompts
+remain authoritative. B00/C01/D01 completion has not been verified in this checkout.
+The human performs Git commits/pushes/authenticated operations. A public fetch with
+credentials disabled verified the merge; no authentication or push was performed.
+Inspect Git state before further operations; local origin/main may remain stale
+because the verification fetched the explicit public URL into FETCH_HEAD.
 
 ## Next work
 
-Run the A01 prompt, then A02/A03, to release the shared contract/helpers/setup as G1. B runs B00 setup immediately and waits for G1 before B01/B02; C01/D01 can start immediately. After G1, A04 and B01 can proceed in parallel on disjoint paths. Follow workflow/status.md for later gates.
+Publish the G1 release documentation branch, then start A04 (resource server) and
+B01 (KDC, after B00) in separate clones from updated main. They can proceed in
+parallel on disjoint owned paths. B02 follows B01; A05 waits for A04/B01/B02 merges
+before releasing G2. G2/G3 remain unreleased. Follow workflow/status.md.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
