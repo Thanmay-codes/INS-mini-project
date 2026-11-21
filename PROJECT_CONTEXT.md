@@ -31,11 +31,11 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-G1 is released. A01–A04 and B01/B02 are merged on main, verified at base
-`084d80d6b92a465d4dd2db9c221a816d1ccf9119` (PR #5 / A04 merge).
-The G1 release record was published in PR #4. Local branch
-`work/a05-integration` adds A05 and is awaiting human review/merge; G2 remains
-NOT RELEASED until merged-main checks and an exact SHA are recorded.
+G1 and G2 are released. A01–A05 and B01/B02 are merged on verified main
+`82915dfd63e873d75733e021cdac17e0ec369b25` (PR #6 / A05 merge).
+Merged-main checks: 254 tests passed, independent A01 fixtures passed and
+pip dependency checks passed. G2 release documentation is prepared on local
+`work/g2-release` for human publication. G3 remains NOT RELEASED.
 
 Implemented shared helpers: frozen v1 models/JSON, AES-GCM tickets, session-key
 request MACs, Scrypt verifier, bounded service-key derivation, settings/logical
@@ -45,7 +45,7 @@ resource access, client authentication/captures/replay and implemented health.
 
 A05 updates the launcher and root README and adds real-process AS→TGS→resource
 integration. Normal and invalid journeys, same-ticket fresh requests, exact
-capture replay, restart and launcher cleanup pass locally; see A05 handoff for
+capture replay, restart and launcher cleanup pass on merged main; see A05 handoff for
 final commands/counts. No KDC/resource stubs or internal mocks are used by A05.
 Earlier B02 tests still include an explicitly labeled resource contract stub.
 Linux/Python 3.14 is the locally verified platform. B's Windows POSIX permission
@@ -65,11 +65,12 @@ completion has not been verified here.
 
 ## Next work
 
-Review/merge A05, then rerun full-suite and independent contract/dependency checks
-on merged main to release G2. Only after that may B resume B03 and A start A06
-in parallel, respecting disjoint ownership. B03 should reconcile B's older client
-usage page with the integrated launcher/root README. A06 should handle the
-existing POSIX-only material-permission test assumption without pretending to
-verify Windows ACLs. Later evidence/scientific work still follows the gates.
+Publish the G2 release record, then start A06 security review and let B resume
+B03 experiments in parallel from fresh main containing the release. Their owned
+paths are separate. B follows its existing B03 prompt and should reconcile the
+older B-owned client usage page with the integrated README/runtime controls.
+A06 should handle the existing POSIX-only material-permission test assumption
+without pretending to verify Windows ACLs. B04 follows B03; A07 waits for A06
+and B04 before reviewing/publishing core evidence. No scientific results exist yet.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
