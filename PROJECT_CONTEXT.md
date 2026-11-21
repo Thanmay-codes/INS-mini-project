@@ -31,42 +31,45 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-A01–A03 are merged and G1 shared core is released against verified main commit
-`20efbae763774af69337e6c97d3b0f29f9ba5092` (PR #3 merge, 21 November 2026).
-The release record is prepared locally on `work/g1-release` for human publication.
+G1 is released. A01–A04 and B01/B02 are merged on main, verified at base
+`084d80d6b92a465d4dd2db9c221a816d1ccf9119` (PR #5 / A04 merge).
+The G1 release record was published in PR #4. Local branch
+`work/a05-integration` adds A05 and is awaiting human review/merge; G2 remains
+NOT RELEASED until merged-main checks and an exact SHA are recorded.
 
-Implemented: frozen v1 protocol/Python contracts and independent fixtures; strict
-models/JSON/settings/logical clocks; AES-GCM tickets, session-key request MACs,
-Scrypt password verification and bounded service-key derivation; persistent
-SQLite replay stores with atomic counters, capacity limits and fail-closed state;
-private role-specific material loading and new-run initialization CLI. See
-`docs/contracts/setup-v1.md` and A01–A03 handoffs for APIs, commands and limits.
-The existing KDC/resource HTTP apps still expose scaffold health behavior.
+Implemented shared helpers: frozen v1 models/JSON, AES-GCM tickets, session-key
+request MACs, Scrypt verifier, bounded service-key derivation, settings/logical
+clocks, private initialization/material loaders and persistent atomic SQLite
+replay/counter state. Merged apps now implement AS login, TGS issuance, protected
+resource access, client authentication/captures/replay and implemented health.
 
-On the merged main SHA, 134 tests passed, independent contract fixture verification
-passed and pip dependency checks were clean. Tests include real SQLite files,
-concurrent child processes, ordinary exit/reopen, rollback, contention and setup
-CLI. These establish shared-helper behavior, not HTTP security or measured paper
-results. Power-loss durability and hostile local filesystem rollback are not
-established. No runtime secrets were committed.
+A05 updates the launcher and root README and adds real-process AS→TGS→resource
+integration. Normal and invalid journeys, same-ticket fresh requests, exact
+capture replay, restart and launcher cleanup pass locally; see A05 handoff for
+final commands/counts. No KDC/resource stubs or internal mocks are used by A05.
+Earlier B02 tests still include an explicitly labeled resource contract stub.
+Linux/Python 3.14 is the locally verified platform. B's Windows POSIX permission
+assertion report remains an A-owned follow-up; no Windows ACL enforcement claim.
 
-Not implemented: AS/login and TGS endpoints, protected resource wiring, complete
-legitimate client journey, full-flow integration, attack runners, measurements,
-plots and manuscript results. A04/B01 must connect authentication to replay-store
-transactions; stateless MAC verification alone does not reject repeats.
+No experiment runner, reviewed E01–E10 measurements, plots or manuscript results
+are released. Integration correctness is not scientific measurement. Ordinary
+process restart does not establish power-loss durability, hostile filesystem
+rollback resistance or recovery of lost responses after a committed operation.
+Runtime secrets/captures stay in ignored private directories.
 
-The 22-task workflow, ownership boundaries and optional lightweight helper prompts
-remain authoritative. B00/C01/D01 completion has not been verified in this checkout.
-The human performs Git commits/pushes/authenticated operations. A public fetch with
-credentials disabled verified the merge; no authentication or push was performed.
-Inspect Git state before further operations; local origin/main may remain stale
-because the verification fetched the explicit public URL into FETCH_HEAD.
+Human performs Git commits/pushes/authentication. Public fetches with credentials
+disabled verified main; no authentication or push was performed by the agent.
+Inspect Git state before further operations; origin/main can be stale because
+verification fetched an explicit public URL into FETCH_HEAD. C/D support-task
+completion has not been verified here.
 
 ## Next work
 
-Publish the G1 release documentation branch, then start A04 (resource server) and
-B01 (KDC, after B00) in separate clones from updated main. They can proceed in
-parallel on disjoint owned paths. B02 follows B01; A05 waits for A04/B01/B02 merges
-before releasing G2. G2/G3 remain unreleased. Follow workflow/status.md.
+Review/merge A05, then rerun full-suite and independent contract/dependency checks
+on merged main to release G2. Only after that may B resume B03 and A start A06
+in parallel, respecting disjoint ownership. B03 should reconcile B's older client
+usage page with the integrated launcher/root README. A06 should handle the
+existing POSIX-only material-permission test assumption without pretending to
+verify Windows ACLs. Later evidence/scientific work still follows the gates.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.

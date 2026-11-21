@@ -1,6 +1,6 @@
 # Simulator protocol v1 — frozen A01 contract
 
-Status: specified, not implemented. G1 remains unreleased. This custom loopback JSON protocol models Kerberos roles; it is not the Kerberos wire protocol. Public vectors are in `data/fixtures/contract/vectors-v1.json`.
+Status: frozen v1 baseline; shared helpers/setup are released as G1, and KDC/client/resource implementations are merged. A05 integration awaits merge and G2 verification; see the gate ledger. This custom loopback JSON protocol models Kerberos roles; it is not the Kerberos wire protocol. Public vectors are in `data/fixtures/contract/vectors-v1.json`.
 
 ## Encoding and validation
 
