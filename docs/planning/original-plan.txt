@@ -1,0 +1,45 @@
+ Title 
+ “Simulation and Security Analysis of Kerberos-Style Ticket-Based Authentication: Replay Attack Mitigation and Kerberoasting Vulnerability Assessment” 
+ Description 
+ This project implements a simplified, educational simulation of the Kerberos authentication protocol (as taught in Information and Network Security, Unit 2 — Remote User Authentication) using two servers: an Authentication Server (AS) that issues time-limited encrypted tickets after login, and a Resource/Service Server (RS) that validates those tickets before granting access to protected resources. 
+ The project has three parts: 
+1.  Baseline implementation — a working Kerberos-style ticket issuance and validation system. 
+2.  Attack 1: Replay Attack — demonstrate that an intercepted, still-valid ticket can be reused by an attacker to gain unauthorized access, especially when server clocks are desynchronized (“clock skew”), then fix it using single-use nonces. 
+3.  Attack 2 (out-of-syllabus extension): Kerberoasting — demonstrate a real-world attack technique currently used against production Active Directory systems, where a service ticket (encrypted with a service account’s password-derived key) is captured and cracked offline to recover a weak password, then mitigate it via strong passwords / modern encryption (AES instead of RC4). 
+ The project explicitly notes that Kerberos remains actively used today in enterprise environments (Windows Active Directory, university/research computing clusters), and that Kerberoasting is one of the most common real-world attack techniques used in penetration testing today — making this practically relevant, not purely historical. 
+ Tech Stack (suggested) 
+-  Language: Python (Flask for the two servers) — easiest for crypto libraries and quick to build. 
+-  Libraries: pycryptodome (AES/RSA/HMAC), flask (two lightweight web servers), hashlib/hmac (nonce checking), passlib or manual (for password hash cracking demo). 
+-  Two separate Flask apps running on different ports = Authentication Server (e.g., port 5000) and Resource Server (e.g., port 5001). 
+ Step-by-Step Implementation Plan 
+ Step 1 — Build the Authentication Server (AS) 
+-  Endpoint /login: accepts username + password. 
+-  On success, generates a “Ticket-Granting Ticket” (TGT): a JSON object containing {username, issue_time, expiry_time, session_key}, encrypted with a secret key only the AS and RS know (simulates the shared master key in real Kerberos). 
+-  Returns the encrypted ticket to the user. 
+ Step 2 — Build the Resource Server (RS) 
+-  Endpoint /access-resource: accepts a ticket. 
+-  Decrypts the ticket using the shared key, checks expiry_time against current time. 
+-  If valid and not expired, grants access; otherwise rejects. 
+ Step 3 — Build a normal client script 
+-  Simulates a user: calls /login, receives ticket, then calls /access-resource with that ticket. Confirm it works end-to-end. 
+ Step 4 — Implement Attack 1: Replay Attack 
+-  Write an “attacker” script that captures a valid ticket (simulate interception — just copy it) and reuses it after the original request. 
+-  Introduce artificial clock skew: manually offset the RS’s or AS’s system time in code (e.g., add a time_offset variable) to simulate servers not being synced. 
+-  Show that under skew, an “expired” ticket can still pass validation — demonstrating the vulnerability. 
+ Step 5 — Fix Attack 1 
+-  Add a nonce: a random one-time value included in each ticket. RS keeps a short-term log (in-memory set or small DB) of nonces it has already seen. 
+-  On each request, RS checks: has this exact nonce been used before? If yes, reject — regardless of clock/expiry state. 
+-  Re-run the replay attack script to confirm it now fails. 
+ Step 6 — Implement Attack 2: Kerberoasting (extension) 
+-  Add a “Service” concept: a specific resource (e.g., a file-share service) that has its own service account, with a ticket encrypted using a key derived from that service account’s password (simulate a weak password like "password123"). 
+-  Simulate an attacker capturing that specific service ticket. 
+-  Write an offline cracking script: attempt to decrypt/verify the ticket using a small wordlist of candidate passwords (dictionary attack) until the correct password is found — demonstrating that a weak service password can be recovered without triggering any login attempt on the real system (this is what makes Kerberoasting dangerous in practice — it’s undetectable at the network level). 
+ Step 7 — Fix Attack 2 
+-  Regenerate the service ticket using a strong, long random password (or simulate switching from weaker RC4-style key derivation to AES-based key derivation) and show that the same dictionary attack now fails within a reasonable time budget. 
+ Step 8 — Benchmarking / Results 
+-  Record: (a) time-to-successful-replay before/after nonce fix, (b) time/attempts needed to crack the weak vs strong service password. 
+-  Present as a simple before/after table or bar chart for both attacks. 
+ Step 9 — Report 
+-  Explain Kerberos fundamentals (syllabus content), then present each attack as: mechanism → demonstration → real-world relevance → fix → re-test confirmation. 
+-  Explicitly state real-world relevance: Kerberos is standard in Windows Active Directory enterprise networks, and Kerberoasting is a live, commonly used attack technique in current penetration testing and real breaches — not a theoretical/obsolete concern. 
+  this is the full plan 

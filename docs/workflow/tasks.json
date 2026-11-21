@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "description": "Static ownership and prerequisite graph; gate completion is lead-maintained in status.md.",
+  "roles": {
+    "A": {
+      "name": "Project lead",
+      "allowed": [
+        "src/kerberos_lab/common/",
+        "src/kerberos_lab/resource_server/",
+        "scripts/",
+        "configs/",
+        "data/fixtures/",
+        "pyproject.toml",
+        "requirements.lock.txt",
+        "README.md",
+        "AGENTS.md",
+        "PROJECT_CONTEXT.md",
+        "docs/contracts/",
+        "docs/workflow/",
+        "docs/prompts/",
+        "docs/implementation-plan.md",
+        "docs/team-work.md",
+        "docs/github-setup.md",
+        "docs/roadmap.md",
+        "docs/handoffs/A/",
+        "docs/report/content/lead/",
+        "results/published/",
+        "tests/conftest.py",
+        "tests/unit/test_a_*.py",
+        "tests/security/test_a_*.py",
+        "tests/integration/test_a_*.py",
+        ".github/",
+        ".gitignore",
+        "docs/handoffs/TEMPLATE.md",
+        "docs/usage/README.md",
+        "tests/README.md"
+      ]
+    },
+    "B": {
+      "name": "KDC, client and experiments",
+      "allowed": [
+        "src/kerberos_lab/kdc/",
+        "src/kerberos_lab/client/",
+        "experiments/",
+        "docs/handoffs/B/",
+        "docs/report/content/experiments/",
+        "docs/usage/client.md",
+        "docs/usage/experiments.md",
+        "tests/unit/test_b_*.py",
+        "tests/integration/test_b_*.py",
+        "tests/security/test_b_*.py"
+      ]
+    },
+    "C": {
+      "name": "Diagrams and presentation",
+      "allowed": [
+        "docs/diagrams/",
+        "docs/presentation/",
+        "docs/handoffs/C/"
+      ]
+    },
+    "D": {
+      "name": "Manuscript formatting and documentation",
+      "allowed": [
+        "docs/report/manuscript/",
+        "docs/report/assets/",
+        "docs/handoffs/D/",
+        "docs/usage/setup-review.md",
+        "docs/usage/submission-inventory.md"
+      ]
+    }
+  },
+  "tasks": [
+    {
+      "id": "A01",
+      "role": "A",
+      "title": "Freeze protocol and Python interfaces",
+      "requires": [],
+      "gates": [],
+      "effort": "strong",
+      "branch": "work/a01-contract",
+      "outputs": [
+        "docs/contracts/",
+        "data/fixtures/contract/"
+      ],
+      "prompt": "docs/prompts/A/A01.md"
+    },
+    {
+      "id": "A02",
+      "role": "A",
+      "title": "Implement shared types, crypto, settings and clocks",
+      "requires": [
+        "A01"
+      ],
+      "gates": [],
+      "effort": "strong",
+      "branch": "work/a02-shared-core",
+      "outputs": [
+        "src/kerberos_lab/common/",
+        "tests/unit/test_a_*.py"
+      ],
+      "prompt": "docs/prompts/A/A02.md"
+    },
+    {
+      "id": "A03",
+      "role": "A",
+      "title": "Implement persistent stores and private lab initialization",
+      "requires": [
+        "A02"
+      ],
+      "gates": [],
+      "effort": "strong",
+      "branch": "work/a03-stores-setup",
+      "outputs": [
+        "src/kerberos_lab/common/",
+        "scripts/init_demo.py",
+        "tests/unit/test_a_*.py",
+        "tests/security/test_a_*.py",
+        "docs/contracts/"
+      ],
+      "prompt": "docs/prompts/A/A03.md"
+    },
+    {
+      "id": "A04",
+      "role": "A",
+      "title": "Implement resource server and both comparison modes",
+      "requires": [
+        "A03"
+      ],
+      "gates": [
+        "G1"
+      ],
+      "effort": "strong",
+      "branch": "work/a04-resource",
+      "outputs": [
+        "src/kerberos_lab/resource_server/",
+        "tests/unit/test_a_*.py",
+        "tests/security/test_a_*.py"
+      ],
+      "prompt": "docs/prompts/A/A04.md"
+    },
+    {
+      "id": "A05",
+      "role": "A",
+      "title": "Integrate and release the real normal flow",
+      "requires": [
+        "A04",
+        "B01",
+        "B02"
+      ],
+      "gates": [
+        "G1"
+      ],
+      "effort": "capable coding plus strong review",
+      "branch": "work/a05-integration",
+      "outputs": [
+        "scripts/run_lab.py",
+        "tests/integration/test_a_*.py",
+        "README.md",
+        "docs/contracts/",
+        "docs/workflow/status.md",
+        "PROJECT_CONTEXT.md"
+      ],
+      "prompt": "docs/prompts/A/A05.md"
+    },
+    {
+      "id": "A06",
+      "role": "A",
+      "title": "Review replay safety and adversarial edge cases",
+      "requires": [
+        "A05"
+      ],
+      "gates": [
+        "G2"
+      ],
+      "effort": "strong",
+      "branch": "work/a06-security-review",
+      "outputs": [
+        "tests/security/test_a_*.py",
+        "tests/unit/test_a_*.py",
+        "src/kerberos_lab/common/",
+        "src/kerberos_lab/resource_server/",
+        "docs/report/content/lead/security-review.md"
+      ],
+      "prompt": "docs/prompts/A/A06.md"
+    },
+    {
+      "id": "A07",
+      "role": "A",
+      "title": "Review and publish core experiment evidence",
+      "requires": [
+        "A06",
+        "B04"
+      ],
+      "gates": [
+        "G2"
+      ],
+      "effort": "lightweight for inventory; strong review for scientific conclusions",
+      "branch": "work/a07-evidence",
+      "outputs": [
+        "results/published/",
+        "docs/report/content/lead/core-findings.md",
+        "docs/workflow/status.md",
+        "PROJECT_CONTEXT.md"
+      ],
+      "prompt": "docs/prompts/A/A07.md"
+    },
+    {
+      "id": "A08",
+      "role": "A",
+      "title": "Write and approve lead scientific content",
+      "requires": [
+        "A07",
+        "B06"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "effort": "strong interpretation; lightweight formatting",
+      "branch": "work/a08-paper-content",
+      "outputs": [
+        "docs/report/content/lead/",
+        "docs/handoffs/A/"
+      ],
+      "prompt": "docs/prompts/A/A08.md"
+    },
+    {
+      "id": "A09",
+      "role": "A",
+      "title": "Review and publish optional service-password evidence",
+      "requires": [
+        "A07",
+        "B05"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "optional": true,
+      "effort": "strong review; lightweight artifact packaging",
+      "branch": "work/a09-extension-review",
+      "outputs": [
+        "results/published/",
+        "docs/report/content/lead/extension-findings.md",
+        "docs/workflow/status.md",
+        "PROJECT_CONTEXT.md"
+      ],
+      "prompt": "docs/prompts/A/A09.md"
+    },
+    {
+      "id": "B00",
+      "role": "B",
+      "title": "Check clone setup and plan the KDC/client integration",
+      "requires": [],
+      "gates": [],
+      "effort": "lightweight",
+      "branch": "work/b00-preflight",
+      "outputs": [
+        "docs/usage/client.md",
+        "docs/handoffs/B/"
+      ],
+      "prompt": "docs/prompts/B/B00.md"
+    },
+    {
+      "id": "B01",
+      "role": "B",
+      "title": "Implement AS and TGS against the released shared API",
+      "requires": [
+        "B00",
+        "A03"
+      ],
+      "gates": [
+        "G1"
+      ],
+      "effort": "capable coding with strong trust-boundary review",
+      "branch": "work/b01-kdc",
+      "outputs": [
+        "src/kerberos_lab/kdc/",
+        "tests/unit/test_b_*.py",
+        "tests/integration/test_b_*.py"
+      ],
+      "prompt": "docs/prompts/B/B01.md"
+    },
+    {
+      "id": "B02",
+      "role": "B",
+      "title": "Implement the legitimate CLI journey and capture API",
+      "requires": [
+        "B01"
+      ],
+      "gates": [
+        "G1"
+      ],
+      "effort": "capable coding; lightweight usage documentation",
+      "branch": "work/b02-client",
+      "outputs": [
+        "src/kerberos_lab/client/",
+        "tests/unit/test_b_*.py",
+        "tests/integration/test_b_*.py",
+        "docs/usage/client.md"
+      ],
+      "prompt": "docs/prompts/B/B02.md"
+    },
+    {
+      "id": "B03",
+      "role": "B",
+      "title": "Build reproducible replay/time/concurrency runners",
+      "requires": [
+        "A05",
+        "B02"
+      ],
+      "gates": [
+        "G2"
+      ],
+      "effort": "capable coding plus strong experiment-design review",
+      "branch": "work/b03-experiments",
+      "outputs": [
+        "experiments/replay/",
+        "experiments/README.md",
+        "tests/integration/test_b_*.py",
+        "tests/security/test_b_*.py",
+        "docs/usage/experiments.md"
+      ],
+      "prompt": "docs/prompts/B/B03.md"
+    },
+    {
+      "id": "B04",
+      "role": "B",
+      "title": "Analyze actual measurements and prepare candidate figures",
+      "requires": [
+        "B03"
+      ],
+      "gates": [
+        "G2"
+      ],
+      "effort": "capable/lightweight coding with A's numerical review",
+      "branch": "work/b04-analysis",
+      "outputs": [
+        "experiments/analysis/",
+        "docs/usage/experiments.md",
+        "tests/unit/test_b_*.py"
+      ],
+      "prompt": "docs/prompts/B/B04.md"
+    },
+    {
+      "id": "B05",
+      "role": "B",
+      "title": "Implement the bounded synthetic password-guessing extension",
+      "requires": [
+        "B04",
+        "A07"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "optional": true,
+      "effort": "capable coding plus A's security/claim review",
+      "branch": "work/b05-password-demo",
+      "outputs": [
+        "experiments/kerberoasting/",
+        "tests/unit/test_b_*.py",
+        "tests/integration/test_b_*.py",
+        "docs/usage/experiments.md"
+      ],
+      "prompt": "docs/prompts/B/B05.md"
+    },
+    {
+      "id": "B06",
+      "role": "B",
+      "title": "Write implementation-faithful methods and results drafts",
+      "requires": [
+        "B04",
+        "A07"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "effort": "lightweight drafting with capable technical verification",
+      "branch": "work/b06-methods-results",
+      "outputs": [
+        "docs/report/content/experiments/",
+        "docs/usage/experiments.md"
+      ],
+      "prompt": "docs/prompts/B/B06.md"
+    },
+    {
+      "id": "C01",
+      "role": "C",
+      "title": "Prepare clearly labeled architecture and flow drafts",
+      "requires": [],
+      "gates": [],
+      "effort": "lightweight",
+      "branch": "work/c01-diagrams",
+      "outputs": [
+        "docs/diagrams/"
+      ],
+      "prompt": "docs/prompts/C/C01.md"
+    },
+    {
+      "id": "C02",
+      "role": "C",
+      "title": "Prepare the demo and presentation skeleton from real commands",
+      "requires": [
+        "C01",
+        "A05"
+      ],
+      "gates": [
+        "G2"
+      ],
+      "effort": "lightweight",
+      "branch": "work/c02-presentation",
+      "outputs": [
+        "docs/presentation/",
+        "docs/diagrams/"
+      ],
+      "prompt": "docs/prompts/C/C02.md"
+    },
+    {
+      "id": "C03",
+      "role": "C",
+      "title": "Finalize approved diagrams, screenshots and result slides",
+      "requires": [
+        "C02",
+        "A07"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "effort": "lightweight",
+      "branch": "work/c03-final-assets",
+      "outputs": [
+        "docs/diagrams/",
+        "docs/presentation/"
+      ],
+      "prompt": "docs/prompts/C/C03.md"
+    },
+    {
+      "id": "D01",
+      "role": "D",
+      "title": "Prepare reference metadata and a neutral manuscript skeleton",
+      "requires": [],
+      "gates": [],
+      "effort": "lightweight",
+      "branch": "work/d01-paper-skeleton",
+      "outputs": [
+        "docs/report/manuscript/",
+        "docs/usage/submission-inventory.md"
+      ],
+      "prompt": "docs/prompts/D/D01.md"
+    },
+    {
+      "id": "D02",
+      "role": "D",
+      "title": "Review fresh-clone setup and reproduce documented commands",
+      "requires": [
+        "D01",
+        "A07"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "effort": "lightweight",
+      "branch": "work/d02-setup-review",
+      "outputs": [
+        "docs/usage/setup-review.md",
+        "docs/usage/submission-inventory.md"
+      ],
+      "prompt": "docs/prompts/D/D02.md"
+    },
+    {
+      "id": "D03",
+      "role": "D",
+      "title": "Assemble approved manuscript and submission assets",
+      "requires": [
+        "D02",
+        "A08",
+        "B06",
+        "C03"
+      ],
+      "gates": [
+        "G3"
+      ],
+      "effort": "lightweight",
+      "branch": "work/d03-manuscript-assembly",
+      "outputs": [
+        "docs/report/manuscript/",
+        "docs/report/assets/",
+        "docs/usage/submission-inventory.md"
+      ],
+      "prompt": "docs/prompts/D/D03.md"
+    }
+  ]
+}
+

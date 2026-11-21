@@ -1,0 +1,16 @@
+# Planned scenario interface; the scaffold does not load this file yet.
+# Use non-secret settings here. Generate keys/tickets/databases in data/private/.
+
+[protocol]
+schema_version = 1
+ticket_lifetime_seconds = 300
+allowed_clock_skew_seconds = 30
+
+[resource]
+defense_mode = "authenticator_cache"
+retain_replay_records_for_full_run = true
+
+[experiments]
+performance_trials = 30
+concurrency_workers = [2, 4, 8]
+resource_clock_offsets_seconds = [-60, -15, 0, 15, 60]
