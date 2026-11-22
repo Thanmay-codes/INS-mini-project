@@ -1,4 +1,5 @@
 """Private setup and role-specific material at the released public seam."""
+import os
 import stat
 import pytest
 
@@ -13,8 +14,6 @@ def test_fresh_run_is_private_and_resource_load_is_independent(tmp_path):
     assert kdc.client_id == 'alice' and kdc.service_id == 'files'
     assert len(kdc.service_key) == len(kdc.tgs_key) == 32
     assert verify_password(' synthetic password ', kdc.password_verifier)
-    assert stat.S_IMODE(run.stat().st_mode) == 0o700
-    assert all(stat.S_IMODE(path.stat().st_mode) == 0o600 for path in run.iterdir())
     with pytest.raises(MalformedRequest):
         initialize_run(run, password='replacement')
     for filename in ('tgs.key', 'user.json', 'kdc.sqlite'):
@@ -72,3 +71,12 @@ def test_invalid_password_creates_no_directory(tmp_path):
     with pytest.raises(MalformedRequest):
         initialize_run(tmp_path / 'run', password='')
     assert not (tmp_path / 'run').exists()
+
+
+@pytest.mark.skipif(os.name != 'posix', reason='POSIX mode bits do not establish Windows ACL protection')
+def test_private_run_permissions_on_posix(tmp_path):
+    from kerberos_lab.common.material import initialize_run
+    run = tmp_path / 'run'
+    initialize_run(run, password='disposable permission test password')
+    assert stat.S_IMODE(run.stat().st_mode) == 0o700
+    assert all(stat.S_IMODE(path.stat().st_mode) == 0o600 for path in run.iterdir())

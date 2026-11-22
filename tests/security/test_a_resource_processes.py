@@ -192,3 +192,50 @@ def test_cli_refuses_missing_state_and_non_loopback_controls(tmp_path):
     unknown = subprocess.run(command + ['--host', '0.0.0.0'], capture_output=True, text=True, timeout=10)
     assert unknown.returncode == 2
     assert 'unrecognized arguments' in unknown.stderr
+
+
+@pytest.mark.parametrize('mode,retry_status,final_count', [
+    ('authenticator_cache', 409, 1), ('authenticator_no_cache', 200, 2),
+])
+def test_unread_response_then_process_termination_preserves_commit(tmp_path, mode, retry_status, final_count):
+    import socket
+    run = tmp_path / 'run'
+    initialize_run(run, password='disposable lost-response test password')
+    settings = Settings(run_dir=run, role='resource', port=5001,
+                        frozen_time_seconds=NOW, defense_mode=mode)
+    captured = _message(*_credentials(settings))
+    material = load_material(run, role='resource')
+    store = ReplayStore.open_existing(material.resource_store_path, expected_run_id=material.run_id, namespace='resource')
+    context = multiprocessing.get_context('spawn')
+    worker = _start(context, settings)
+    try:
+        # Send the real request, then discard the connection without reading a
+        # response. Public committed state is our oracle, not an HTTP success.
+        with socket.create_connection(('127.0.0.1', worker[2]), timeout=5) as connection:
+            headers = (f'POST /access-resource HTTP/1.1\r\nHost: 127.0.0.1\r\n'
+                       f'Content-Type: application/json\r\nContent-Length: {len(captured)}\r\n'
+                       'Connection: close\r\n\r\n').encode('ascii')
+            connection.sendall(headers + captured)
+            connection.shutdown(socket.SHUT_WR)
+        deadline = time.monotonic() + 5
+        while store.counter(service_id='files') != 1:
+            assert time.monotonic() < deadline, 'request did not commit before process termination'
+            time.sleep(0.02)
+        worker[0].terminate()
+        worker[0].join(10)
+        assert not worker[0].is_alive()
+    finally:
+        if worker[0].is_alive():
+            worker[0].terminate()
+            worker[0].join(10)
+    restarted = _start(context, settings)
+    try:
+        status, body = _http(restarted[2], captured)
+        assert status == retry_status
+        if status == 409:
+            assert body == {'version': 1, 'error': 'replay_detected'}
+        else:
+            assert body['counter'] == 2
+        assert store.counter(service_id='files') == final_count
+    finally:
+        _stop(restarted)
