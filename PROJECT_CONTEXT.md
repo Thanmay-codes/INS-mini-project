@@ -7,7 +7,7 @@ Last updated: 24 November 2026 (Asia/Kolkata).
 - College Information and Network Security project and a paper for a small college conference.
 - The Kerberos-style authentication/security topic has already been submitted. Keep that topic; refine its implementation and experiments.
 - Four team members, realistically two active developers. The user owns the most consequential security work; one contributor owns the second most important implementation work; two contributors handle support tasks outside the critical build path.
-- Repository: https://github.com/Thanmay-codes/INS-mini-project . Remote availability/content is not assumed verified.
+- Repository: https://github.com/Thanmay-codes/INS-mini-project. Public `main` was fetched and verified at `3845f42d983e6f741b47bf212c227f26b12efc9d` on 24 November 2026 (Asia/Kolkata).
 - The user handles commands requiring Git credentials. Prepare files and local Git state without authenticating, pushing, or requesting credentials.
 - Deadline, conference format/rubric, teammate names, and teammates' operating systems are not yet supplied. Use milestone order rather than invented calendar dates.
 
@@ -32,8 +32,8 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 ## Current implementation status
 
 G1, G2 and G3 are released. A06, B03 runner, B04 analyzer, B's A07 reporting
-correction and A07 evidence are merged on verified main
-`38fe775067042f40e06e3cd05bce05ffabf00f6c`. The core application,
+correction, A07 evidence and the G3 release record are merged on verified main
+`3845f42d983e6f741b47bf212c227f26b12efc9d`. The core application,
 launcher, shared crypto/state and security review exist. A06 corrected the
 POSIX-only permission-test assumption; Windows ACLs remain unverified.
 
@@ -46,10 +46,10 @@ E05 worker-count condition, restart replay rejection and declared offset/boundar
 outcomes. Sanitized outputs and provenance are tracked in
 `results/published/a07-20261124/`; raw inputs remain ignored.
 
-The G3 release record is prepared on `work/g3-release`; its evidence source is
-the tracked `results/published/a07-20261124/` manifest. Optional password
-experiments and final manuscript/presentation remain pending. No production
-Kerberos/AD, NTP exploitation, power-loss or exactly-once claim is made.
+The G3 release record was merged in PR #11. Its evidence source is the tracked
+`results/published/a07-20261124/` manifest. Optional password experiments and
+final manuscript/presentation remain pending. No production Kerberos/AD, NTP
+exploitation, power-loss or exactly-once claim is made.
 
 The new global instruction path `/home/thanmay/.agents/main.md` was requested but
 is absent on this machine; project instructions were available and followed.
@@ -59,8 +59,8 @@ minor B-owned login username-schema follow-up remain outside this evidence task.
 
 ## Next work
 
-Human reviews and merges `work/g3-release`. Then B starts B06 from that updated
-main to draft implementation-faithful methods/results from published evidence.
-A08 follows B06's merge. B05/A09 remains optional and is not implied by G3.
+Next, B starts B06 from fresh `main` to draft implementation-faithful
+methods/results from published evidence. A08 follows B06's merge. B05/A09
+remains optional and is not implied by G3.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
