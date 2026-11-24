@@ -115,6 +115,13 @@ def test_unknown_user_and_wrong_password_have_same_public_error(kdc, username, p
     assert response.get_json() == {"version": 1, "error": "invalid_credentials"}
 
 
+@pytest.mark.parametrize("username", ["", "Alice", "a" * 65])
+def test_malformed_login_username_returns_400(kdc, username):
+    response = login(kdc[0], username=username, password=PASSWORD)
+    assert response.status_code == 400
+    assert response.get_json() == {"version": 1, "error": "malformed_request"}
+
+
 @pytest.mark.parametrize("tamper", ["ciphertext", "kind"])
 def test_modified_or_wrong_kind_tgt_is_rejected(kdc, tamper):
     client, _run_dir, _clock = kdc
