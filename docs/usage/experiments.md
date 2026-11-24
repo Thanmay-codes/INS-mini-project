@@ -110,3 +110,31 @@ as the applications; no test-only runtime-material implementation is used.
 
 See `experiments/replay/README.md` for the E01–E10 map and `docs/handoffs/B/B03.md`
 for the exact validation commands and observed run status.
+
+## Bounded synthetic password-guessing extension (B05, optional)
+
+Run the Kerberoasting-inspired offline verification demo (E11–E12) with the
+released PBKDF2-SHA256 (`100,000` iterations, 16-byte salt) + AES-GCM helpers
+and the bundled `data/wordlists/demo.txt` list:
+
+```bash
+python experiments/kerberoasting/runner.py
+```
+
+Each invocation writes sanitized `results.jsonl`, `summary.csv`, and
+`environment.json` into a new ignored `results/raw/b05-<UTC-id>/` directory.
+E11 uses a weak password present in `data/wordlists/demo.txt`; E12 uses a
+generated random password absent from the list. Both cases keep the cipher,
+KDF, salt size, iteration count, candidate list/order, and budget identical.
+Offline verification makes zero network calls and distinguishes malformed
+artifacts (`MalformedRequest`) from candidate mismatches (`InvalidAuthentication`).
+
+Run the B05 unit and integration tests with:
+
+```bash
+python -m pytest tests/unit/test_b_kerberoasting.py tests/integration/test_b_kerberoasting_runner.py -q --tb=short
+```
+
+These outputs are a local mechanism demonstration awaiting A09 review; they do
+not model Active Directory RC4/RFC 3962 encryption types, Windows Event 4769,
+or general password uncrackability.
