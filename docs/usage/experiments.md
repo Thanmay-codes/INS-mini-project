@@ -45,6 +45,48 @@ directory:
 - `environment.json`: Git HEAD, Python/platform details, scenario/config
   values, timing definitions, and the interpretation limit for time reasons.
 
+## Analyze actual runs
+
+B04's deterministic analyzer consumes one or more B03 run directories. Generate
+a fresh smoke run and the planned 30 independent trials for selected request
+performance conditions, then write candidate tables and a candidate SVG into
+ignored output paths:
+
+```powershell
+$id = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+$smoke = "results/raw/b03-smoke-$id"
+$performance = "results/raw/b04-performance-$id"
+$candidate = "results/figures/b04-analysis-$id"
+python experiments/replay/runner.py --trials 1 --output-dir $smoke
+python experiments/replay/runner.py --scenarios E01,E02,E03 --trials 30 --output-dir $performance
+python experiments/analysis/analyze.py $smoke $performance --output-dir $candidate
+```
+
+The analyzer verifies each source's metadata and reconciles JSONL request
+counts, decisions, and failed trials against its runner `summary.csv` before
+calculating anything. It emits `scenario_summary.csv`, `primary_metrics.csv`,
+`time_categories.csv`, `performance_summary.csv`,
+`candidate_performance.svg`, and `analysis_metadata.json`. Metadata records
+source paths, run Git SHAs, scenario order, SHA-256 digests for all three
+source files, and a hash of the analyzer script. Raw and candidate files remain
+local and ignored; the B03 runner and B04 analyzer code are tracked, but raw
+data are not transferred by Git.
+
+Request-latency p50 and p95 use nearest rank with no interpolation:
+`sorted_values[ceil(p*n)-1]`. For run-to-run variation, the analyzer first
+calculates each trial's median request latency (averaging the middle two for
+even sample counts), then reports nearest-rank p50/p95 across those trial
+medians. The scenario tables report requested, observed, missing, and failed
+trials/attempts. Duplicate acceptance counts only E02 copies after the original.
+Legitimate rejection uses E01 and E03, treats HTTP 4xx/5xx as protocol
+rejections, and keeps transport failures separate. Time rejection categories
+are counted per scenario, phase, and offset from the runner's modeled
+validation order, not a server diagnostic; their observed trial denominators
+are shared across categories within that condition. The generated SVG includes
+only complete groups with at least 30 requested trials;
+incomplete groups remain visible in the CSV tables. These outputs are candidate
+material for A07 review, not approved publication.
+
 Runtime keys and replay stores exist only in temporary per-trial directories
 under ignored `data/private/` and are deleted after the scenario. Do not copy
 those files into evidence or commit raw results. Outputs are candidate evidence;
