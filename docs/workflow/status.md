@@ -1,21 +1,20 @@
 # Release status — lead-owned
 
-Updated 24 November 2026. G1/G2 released; A06/B03/B04 merged. A07 regenerated
-core observations but publication is blocked by reporting corrections. G3 remains
-NOT RELEASED.
+Updated 24 November 2026. G1/G2 are released. A07's corrected, reviewed evidence
+is prepared on `work/a07-evidence-final`; G3 remains NOT RELEASED until that work
+is merged and verified on the exact resulting main commit.
 
 | Gate | State | Required evidence |
 | --- | --- | --- |
 | G1 shared core | RELEASED | A01–A03 verified at main `20efbae763774af69337e6c97d3b0f29f9ba5092`; 134 tests and fixture checks pass |
 | G2 normal flow | RELEASED | A04/B01/B02/A05 verified at main `82915dfd63e873d75733e021cdac17e0ec369b25`; 254 tests and fixture checks pass |
-| G3 reviewed core results | NOT RELEASED | A06/B03/B04/A07 merged; reviewed E01–E10 evidence published |
+| G3 reviewed core results | NOT RELEASED | A07 branch merge plus merged-main verification of reviewed E01–E10 evidence |
 | Optional extension | NOT IMPLEMENTED | B05 merged; A reviews bounded actual measurements |
 | Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
 
-A01–A06, B01–B04 are present on base main
-`05422d01232607f609983e770f82e86d3333e5b2`. A07 is incomplete on
-`work/a07-evidence`; the B04 E04 denominator bug must be fixed before evidence
-publication. C/D completion has not been verified here.
+A01–A06 and B01–B04 are present, along with B's reporting correction, on main
+`636ba23f066b082eccc1d590e17f62608b2bd626`. A07's reviewed evidence is ready on
+`work/a07-evidence-final`; C/D completion has not been verified here.
 
 When A releases a gate, record the exact merged main commit, passing commands, handoff links, and remaining limitations below. Contributors report status in their own task handoffs instead of editing this file.
 

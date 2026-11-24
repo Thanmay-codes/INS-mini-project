@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "evidence_id": "a07-20261124",
+  "review_status": "A07 reviewed evidence; merge and merged-main verification are still required before the G3 release record.",
+  "approval_meaning": "These sanitized summaries are the only A07 measurement values approved for later paper drafting after the A07 task and its merged-main verification are complete. They do not establish production Kerberos behavior, a new vulnerability, NTP compromise, power-loss durability, or exactly-once response recovery.",
+  "producing_code": {
+    "git_commit": "636ba23f066b082eccc1d590e17f62608b2bd626",
+    "runner_sha256": "631cd86de7cb467a84e92c31532c1a61a04488d7617c618d02246c06b8e5ee3a",
+    "analyzer_sha256": "2451475647e70ae0a158917e7e5e90890726bc0426419914c3eb642865ebb59b"
+  },
+  "commands": [
+    ".venv/bin/python experiments/replay/runner.py --trials 1 --output-dir results/raw/a07-final-smoke-20261124",
+    ".venv/bin/python experiments/replay/runner.py --scenarios E01,E02,E03 --trials 30 --output-dir results/raw/a07-final-perf-30-20261124",
+    ".venv/bin/python experiments/analysis/analyze.py results/raw/a07-final-smoke-20261124 results/raw/a07-final-perf-30-20261124 --output-dir results/figures/a07-final-review-20261124"
+  ],
+  "source_runs": [
+    {
+      "id": "a07-final-smoke-20261124",
+      "scenarios": ["E01", "E02", "E03", "E04", "E05", "E06", "E07", "E08", "E09", "E10"],
+      "trials_per_scenario": 1,
+      "attempt_count": 46,
+      "failed_attempts": 0,
+      "sha256": {
+        "requests.jsonl": "e8edb860e07f3ee1ae9e5c32d9681b8a6bf401ee4d70c0afb572d8c0850c7567",
+        "summary.csv": "ca83c41b07787df85ecd7b298cb9957973840c24818ee4d5bd9811ca7d3b1c00",
+        "environment.json": "efaa71c7248561d7fba0f3d69ace2d05e1a4007f6108ee08434a04cd2119e018"
+      }
+    },
+    {
+      "id": "a07-final-perf-30-20261124",
+      "scenarios": ["E01", "E02", "E03"],
+      "trials_per_scenario": 30,
+      "attempt_count": 300,
+      "failed_attempts": 0,
+      "sha256": {
+        "requests.jsonl": "640f86a7f2580cb56cc51cb064b9a492b27bbeb0bd2dd74665384ed1f609cd7a",
+        "summary.csv": "721c88e19e669012d58bb19b6e49ea3930a85ca0cb17d6ba11eaed6d4ca13e40",
+        "environment.json": "71c7ce437a1a30f4b2a35b23c20bf0e17a12f540c5d5d0b068818b8ac32be043"
+      }
+    }
+  ],
+  "configuration": {
+    "comparison_modes": ["authenticator_no_cache", "authenticator_cache"],
+    "trial_order": "trial-major; selected scenarios run in scenario order for each trial",
+    "request_timing": "time.perf_counter_ns around one loopback HTTP request",
+    "startup_timing": "from subprocess.Popen return until the first healthy endpoint response",
+    "allowed_skew_seconds": 30,
+    "ticket_boundary_leeway_seconds": 30,
+    "host_clock_modified": false
+  },
+  "reviewed_findings": {
+    "duplicate_acceptance": {
+      "scenario": "E02",
+      "no_cache": "30/30 duplicate requests accepted",
+      "cache": "0/30 duplicate requests accepted"
+    },
+    "legitimate_rejection": {
+      "scenarios": ["E01", "E03"],
+      "no_cache": "0/90 legitimate requests rejected",
+      "cache": "0/90 legitimate requests rejected"
+    },
+    "functional_smoke": "46 expected attempts across E01-E10 completed with zero failed attempts; E04 reports one expected, one observed and zero missing attempt for each mutation phase."
+  },
+  "limitations": [
+    "E04-E10 are represented by a one-trial smoke run; only E01-E03 have 30 repeated trials.",
+    "The no-cache mode is intentionally incomplete and is a local comparison control, not a claim about standard Kerberos deployments.",
+    "Time categories are derived by the runner from declared validation rules; the public service response does not disclose an internal failure reason.",
+    "Fixed mode order, cold process starts and mixed E02 accept/reject responses mean latency values are descriptive local measurements, not a causal speedup or throughput claim.",
+    "Ordinary local process restart and SQLite retention are tested; machine crash, power loss, hostile rollback, distributed replay coordination and exactly-once response recovery are outside this evidence."
+  ],
+  "published_files_sha256": {
+    "primary_metrics.csv": "43e55b0ebebe56917e453f3c37e50f71f2115886968c0734648e23b5e3e39115",
+    "scenario_summary.csv": "2dfa92d8df166ed169f3f60401839a299f43ec0ef5c241401f4f517f654857c8",
+    "time_categories.csv": "a12856453eba72a353a796506e282cf7cb99cff699171e6d86df2a5da27a08bb",
+    "performance_summary.csv": "457a48c67ab725337230c1d7772b27cc3539b8acb88ea87624208abee1ee033f",
+    "request_latency.svg": "0b6ee15a5c100ee24e1247559b105724eada7f6243ade1b65c572f6173aad8f5"
+  }
+}
