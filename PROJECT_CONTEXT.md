@@ -1,6 +1,6 @@
 # Project context for future chats
 
-Last updated: 21 November 2026 (Asia/Kolkata).
+Last updated: 24 November 2026 (Asia/Kolkata).
 
 ## User's goal and constraints
 
@@ -31,46 +31,43 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-G1 and G2 are released. A01–A05 and B01/B02 are merged on verified main
-`82915dfd63e873d75733e021cdac17e0ec369b25` (PR #6 / A05 merge).
-Merged-main checks: 254 tests passed, independent A01 fixtures passed and
-pip dependency checks passed. G2 release documentation is prepared on local
-`work/g2-release` for human publication. G3 remains NOT RELEASED.
+G1 and G2 are released. A06, B03 runner and B04 analyzer are merged on verified
+main base `05422d01232607f609983e770f82e86d3333e5b2`. The core application,
+launcher, shared crypto/state and security review exist. A06 corrected the
+POSIX-only permission-test assumption; Windows ACLs remain unverified.
 
-Implemented shared helpers: frozen v1 models/JSON, AES-GCM tickets, session-key
-request MACs, Scrypt verifier, bounded service-key derivation, settings/logical
-clocks, private initialization/material loaders and persistent atomic SQLite
-replay/counter state. Merged apps now implement AS login, TGS issuance, protected
-resource access, client authentication/captures/replay and implemented health.
+A07 is active on `work/a07-evidence` but BLOCKED for publication on B-owned
+reporting corrections. This is not a runtime replay-defense failure. Local
+regeneration produced 46 E01–E10 smoke attempts plus 300 E01–E03 attempts across
+30 trials per scenario, with no unexpected outcomes or transport failures.
+Independent status/counter/percentile checks reproduced 30/30 no-cache versus
+0/30 cache duplicate grants and 0/90 legitimate rejections per mode. These are
+preliminary audit observations, not approved published evidence or G3 release.
 
-A05 updates the launcher and root README and adds real-process AS→TGS→resource
-integration. Normal and invalid journeys, same-ticket fresh requests, exact
-capture replay, restart and launcher cleanup pass on merged main; see A05 handoff for
-final commands/counts. No KDC/resource stubs or internal mocks are used by A05.
-Earlier B02 tests still include an explicitly labeled resource contract stub.
-Linux/Python 3.14 is the locally verified platform. B's Windows POSIX permission
-assertion report remains an A-owned follow-up; no Windows ACL enforcement claim.
+Blocking corrections: B04's scenario_summary assigns four expected attempts to
+each E04 mutation phase instead of one, falsely reporting three missing per
+phase. B03 metadata also mislabels trial-major ordering and a startup timer that
+starts after Popen returns. See A07 handoff for exact reproduction and owner fix
+requests. No B-owned source file was changed during this review.
 
-No experiment runner, reviewed E01–E10 measurements, plots or manuscript results
-are released. Integration correctness is not scientific measurement. Ordinary
-process restart does not establish power-loss durability, hostile filesystem
-rollback resistance or recovery of lost responses after a committed operation.
-Runtime secrets/captures stay in ignored private directories.
+Raw inputs and candidate analysis remain in ignored results/raw and
+results/figures directories. Nothing is approved in results/published. Optional
+password experiments and the final manuscript/presentation remain pending. No
+production Kerberos/AD, NTP exploitation, power-loss or exactly-once claim is made.
 
-Human performs Git commits/pushes/authentication. Public fetches with credentials
-disabled verified main; no authentication or push was performed by the agent.
-Inspect Git state before further operations; origin/main can be stale because
-verification fetched an explicit public URL into FETCH_HEAD. C/D support-task
-completion has not been verified here.
+The new global instruction path `/home/thanmay/.agents/main.md` was requested but
+is absent on this machine; project instructions were available and followed.
+The human still performs commits/pushes/authenticated operations. Public fetches
+used disabled credentials. Native Windows lifecycle/ACL validation and A06's
+minor B-owned login username-schema follow-up remain outside this evidence task.
 
 ## Next work
 
-Publish the G2 release record, then start A06 security review and let B resume
-B03 experiments in parallel from fresh main containing the release. Their owned
-paths are separate. B follows its existing B03 prompt and should reconcile the
-older B-owned client usage page with the integrated README/runtime controls.
-A06 should handle the existing POSIX-only material-permission test assumption
-without pretending to verify Windows ACLs. B04 follows B03; A07 waits for A06
-and B04 before reviewing/publishing core evidence. No scientific results exist yet.
+B corrects analyzer E04 condition denominators with regression cases and aligns
+runner order/startup metadata with actual execution. Merge those corrections,
+then resume A07 from updated main and regenerate/review affected evidence before
+sanitized publication. Merging this blocker/review note is NOT completion of A07.
+G3 stays unreleased until complete approved evidence and merged-main verification.
+Only then start dependent B05/B06 and later paper packaging per the workflow.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.

@@ -1,6 +1,8 @@
 # Release status — lead-owned
 
-Updated 21 November 2026. G1 and G2 released. A05 is merged and real-process normal/invalid integration checks pass on merged main. Experiment measurements remain unfinished.
+Updated 24 November 2026. G1/G2 released; A06/B03/B04 merged. A07 regenerated
+core observations but publication is blocked by reporting corrections. G3 remains
+NOT RELEASED.
 
 | Gate | State | Required evidence |
 | --- | --- | --- |
@@ -10,7 +12,10 @@ Updated 21 November 2026. G1 and G2 released. A05 is merged and real-process nor
 | Optional extension | NOT IMPLEMENTED | B05 merged; A reviews bounded actual measurements |
 | Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
 
-A01–A05 and B01/B02 are merged and verified at `82915dfd63e873d75733e021cdac17e0ec369b25`. A06 and B03 are eligible after this release record is published. C01/D01 remain independent support tasks; their completion has not been verified here. All code-dependent prompts must check their listed predecessor files and evidence.
+A01–A06, B01–B04 are present on base main
+`05422d01232607f609983e770f82e86d3333e5b2`. A07 is incomplete on
+`work/a07-evidence`; the B04 E04 denominator bug must be fixed before evidence
+publication. C/D completion has not been verified here.
 
 When A releases a gate, record the exact merged main commit, passing commands, handoff links, and remaining limitations below. Contributors report status in their own task handoffs instead of editing this file.
 
@@ -70,3 +75,20 @@ this release record. B03 follows its existing prompt; its old blocker is now
 satisfied. B04 follows B03, and A07 waits for both A06 and B04. G3 remains
 NOT RELEASED. B should reconcile its older client usage page; A06 should handle
 the platform-specific permission assertion without claiming Windows ACL checks.
+
+## A07 review — 24 November 2026, publication blocked
+
+Base: `05422d01232607f609983e770f82e86d3333e5b2`. Regenerated smoke:
+46 attempts across E01–E10; repeated E01–E03: 300 attempts / 30 trials per
+scenario. No unexpected outcomes or transport failures. Functional/counter and
+latency calculations were independently checked; these remain unapproved audit
+observations. See [A07 handoff](../handoffs/A/A07.md) and
+[preliminary findings](../report/content/lead/core-findings.md).
+
+Blocking B-owned work: correct per-phase E04 denominators (currently 4 expected
+versus 1 actual per phase/trial), actual trial-major ordering metadata, and
+startup timer boundary/label. No B-owned files or released interfaces were edited.
+
+Resume evidence regeneration/review after corrections are merged. Do not mark A07
+complete merely because its blocker note is merged. No approved evidence exists
+in results/published; G3, optional extension and final paper gates are unchanged.
