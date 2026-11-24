@@ -1,0 +1,10 @@
+source_run,metric,defense_mode,numerator,expected_denominator,attempted_duplicates,observed_denominator,missing_observations,fraction_expected_denominator,fraction_observed_denominator,protected_operations,attempted_replays
+a07-final-smoke-20261124,duplicate_acceptance,authenticator_cache,0,1,1,1,0,0.0,0.0,0,
+a07-final-smoke-20261124,duplicate_acceptance,authenticator_no_cache,1,1,1,1,0,1.0,1.0,1,
+a07-final-smoke-20261124,legitimate_rejection,authenticator_cache,0,3,,3,0,0.0,0.0,3,
+a07-final-smoke-20261124,legitimate_rejection,authenticator_no_cache,0,3,,3,0,0.0,0.0,3,
+a07-final-smoke-20261124,restart_replay_rejection,authenticator_cache,1,1,,1,0,1.0,1.0,0,1
+a07-final-perf-30-20261124,duplicate_acceptance,authenticator_cache,0,30,30,30,0,0.0,0.0,0,
+a07-final-perf-30-20261124,duplicate_acceptance,authenticator_no_cache,30,30,30,30,0,1.0,1.0,30,
+a07-final-perf-30-20261124,legitimate_rejection,authenticator_cache,0,90,,90,0,0.0,0.0,90,
+a07-final-perf-30-20261124,legitimate_rejection,authenticator_no_cache,0,90,,90,0,0.0,0.0,90,

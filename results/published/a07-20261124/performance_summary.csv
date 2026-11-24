@@ -1,0 +1,13 @@
+source_run,scenario,defense_mode,requested_trials,observed_trials,missing_trials,failed_trials,expected_attempt_denominator,observed_attempts,missing_attempts,accepted,rejected_http_responses,transport_failures,protected_operations,latency_p50_ms,latency_p95_ms,trial_median_latency_p50_ms,trial_median_latency_p95_ms,startup_p50_ms,startup_p95_ms
+a07-final-smoke-20261124,E01,authenticator_cache,1,1,0,0,1,1,0,1,0,0,1,11.3554,11.3554,11.3554,11.3554,356.5638,356.5638
+a07-final-smoke-20261124,E01,authenticator_no_cache,1,1,0,0,1,1,0,1,0,0,1,13.7091,13.7091,13.7091,13.7091,306.7807,306.7807
+a07-final-smoke-20261124,E02,authenticator_cache,1,1,0,0,2,2,0,1,1,0,1,2.6057,11.6462,7.1259,7.1259,356.4167,356.4167
+a07-final-smoke-20261124,E02,authenticator_no_cache,1,1,0,0,2,2,0,2,0,0,2,8.0246,14.9082,11.4664,11.4664,306.8974,306.8974
+a07-final-smoke-20261124,E03,authenticator_cache,1,1,0,0,2,2,0,2,0,0,2,8.1343,11.7426,9.9385,9.9385,306.4348,306.4348
+a07-final-smoke-20261124,E03,authenticator_no_cache,1,1,0,0,2,2,0,2,0,0,2,7.0004,14.7371,10.8687,10.8687,408.8535,408.8535
+a07-final-perf-30-20261124,E01,authenticator_cache,30,30,0,0,30,30,0,30,0,0,30,11.8839,13.982,11.8839,13.982,306.2966,407.3301
+a07-final-perf-30-20261124,E01,authenticator_no_cache,30,30,0,0,30,30,0,30,0,0,30,12.4544,14.5174,12.4544,14.5174,306.7009,407.5324
+a07-final-perf-30-20261124,E02,authenticator_cache,30,30,0,0,60,60,0,30,30,0,30,3.9937,14.9442,7.8096,9.2784,305.9715,408.7293
+a07-final-perf-30-20261124,E02,authenticator_no_cache,30,30,0,0,60,60,0,60,0,0,60,9.1162,14.2462,9.9586,11.3091,306.3488,408.0866
+a07-final-perf-30-20261124,E03,authenticator_cache,30,30,0,0,60,60,0,60,0,0,60,9.0404,13.8268,10.0068,11.0278,306.1095,408.377
+a07-final-perf-30-20261124,E03,authenticator_no_cache,30,30,0,0,60,60,0,60,0,0,60,9.9426,14.4951,9.9624,11.4938,306.2444,407.4177

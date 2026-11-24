@@ -31,28 +31,25 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-G1 and G2 are released. A06, B03 runner and B04 analyzer are merged on verified
-main base `05422d01232607f609983e770f82e86d3333e5b2`. The core application,
+G1 and G2 are released. A06, B03 runner, B04 analyzer and the B A07 reporting
+correction are merged on verified main `636ba23f066b082eccc1d590e17f62608b2bd626`.
+The core application,
 launcher, shared crypto/state and security review exist. A06 corrected the
 POSIX-only permission-test assumption; Windows ACLs remain unverified.
 
-A07 is active on `work/a07-evidence` but BLOCKED for publication on B-owned
-reporting corrections. This is not a runtime replay-defense failure. Local
-regeneration produced 46 E01–E10 smoke attempts plus 300 E01–E03 attempts across
-30 trials per scenario, with no unexpected outcomes or transport failures.
-Independent status/counter/percentile checks reproduced 30/30 no-cache versus
-0/30 cache duplicate grants and 0/90 legitimate rejections per mode. These are
-preliminary audit observations, not approved published evidence or G3 release.
+A07 is complete on local `work/a07-evidence-final`, based on corrected main, and
+is ready for human review/merge. Fresh regeneration produced 46 E01–E10 smoke
+attempts plus 300 E01–E03 attempts across 30 trials per scenario, with zero
+failed or transport attempts. Independent record checks reproduced 30/30
+no-cache versus 0/30 cache duplicate grants, 0/90 legitimate rejections per
+mode, correct E04 phase denominators, single successful operations in every
+E05 worker-count condition, restart replay rejection and declared offset/boundary
+outcomes. Sanitized outputs and provenance are tracked in
+`results/published/a07-20261124/`; raw inputs remain ignored.
 
-Blocking corrections: B04's scenario_summary assigns four expected attempts to
-each E04 mutation phase instead of one, falsely reporting three missing per
-phase. B03 metadata also mislabels trial-major ordering and a startup timer that
-starts after Popen returns. See A07 handoff for exact reproduction and owner fix
-requests. No B-owned source file was changed during this review.
-
-Raw inputs and candidate analysis remain in ignored results/raw and
-results/figures directories. Nothing is approved in results/published. Optional
-password experiments and the final manuscript/presentation remain pending. No
+G3 remains unreleased until the A07 completion branch is merged and these
+evidence references are rechecked on the resulting main commit. Optional
+password experiments and final manuscript/presentation remain pending. No
 production Kerberos/AD, NTP exploitation, power-loss or exactly-once claim is made.
 
 The new global instruction path `/home/thanmay/.agents/main.md` was requested but
@@ -63,11 +60,9 @@ minor B-owned login username-schema follow-up remain outside this evidence task.
 
 ## Next work
 
-B corrects analyzer E04 condition denominators with regression cases and aligns
-runner order/startup metadata with actual execution. Merge those corrections,
-then resume A07 from updated main and regenerate/review affected evidence before
-sanitized publication. Merging this blocker/review note is NOT completion of A07.
-G3 stays unreleased until complete approved evidence and merged-main verification.
-Only then start dependent B05/B06 and later paper packaging per the workflow.
+Human reviews and merges `work/a07-evidence-final`; A then verifies the exact
+merged main commit and records the G3 release. B06 methods/results drafting and
+A08 scientific content may start only after that release. B05/A09 remains
+optional and is not implied by G3.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
