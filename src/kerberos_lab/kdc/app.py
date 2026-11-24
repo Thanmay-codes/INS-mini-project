@@ -9,6 +9,7 @@ import sys
 from flask import Flask, jsonify, request
 from werkzeug.exceptions import BadRequest, RequestEntityTooLarge
 
+from kerberos_lab.common._validation import identifier
 from kerberos_lab.common.clock import Clock
 from kerberos_lab.common.crypto import (
     encode_b64,
@@ -109,6 +110,7 @@ def create_app(settings: Settings, *, clock: Clock | None = None) -> Flask:
         password = body["password"]
         if not isinstance(username, str) or not isinstance(password, str):
             raise MalformedRequest("invalid_login_fields")
+        identifier(username)
 
         # Verify even for an unknown username so both credential failures do
         # comparable password-KDF work and share one public response.
