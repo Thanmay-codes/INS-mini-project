@@ -1,8 +1,9 @@
 {
   "schema_version": 1,
   "evidence_id": "a07-20261124",
-  "review_status": "A07 reviewed evidence; merge and merged-main verification are still required before the G3 release record.",
-  "approval_meaning": "These sanitized summaries are the only A07 measurement values approved for later paper drafting after the A07 task and its merged-main verification are complete. They do not establish production Kerberos behavior, a new vulnerability, NTP compromise, power-loss durability, or exactly-once response recovery.",
+  "review_status": "A07 reviewed evidence; G3 released after verification on merged main 3845f42d983e6f741b47bf212c227f26b12efc9d.",
+  "approval_meaning": "These sanitized summaries are the approved A07 measurement values for later paper drafting. They do not establish production Kerberos behavior, a new vulnerability, NTP compromise, power-loss durability, or exactly-once response recovery.",
+  "g3_release_main_commit": "3845f42d983e6f741b47bf212c227f26b12efc9d",
   "producing_code": {
     "git_commit": "636ba23f066b082eccc1d590e17f62608b2bd626",
     "runner_sha256": "631cd86de7cb467a84e92c31532c1a61a04488d7617c618d02246c06b8e5ee3a",

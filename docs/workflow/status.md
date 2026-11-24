@@ -1,19 +1,19 @@
 # Release status — lead-owned
 
-Updated 24 November 2026. G1/G2/G3 are released. G3 evidence was verified on
-merged main `38fe775067042f40e06e3cd05bce05ffabf00f6c`; this release record is
-prepared on `work/g3-release` for human publication.
+Updated 24 November 2026. G1/G2/G3 are released. G3 evidence and the release
+record are merged on verified public main
+`3845f42d983e6f741b47bf212c227f26b12efc9d` (PR #11).
 
 | Gate | State | Required evidence |
 | --- | --- | --- |
 | G1 shared core | RELEASED | A01–A03 verified at main `20efbae763774af69337e6c97d3b0f29f9ba5092`; 134 tests and fixture checks pass |
 | G2 normal flow | RELEASED | A04/B01/B02/A05 verified at main `82915dfd63e873d75733e021cdac17e0ec369b25`; 254 tests and fixture checks pass |
-| G3 reviewed core results | RELEASED | A07 evidence verified on main `38fe775067042f40e06e3cd05bce05ffabf00f6c`; 296 tests, fixtures, dependencies and manifest hashes pass |
+| G3 reviewed core results | RELEASED | A07 evidence verified on main `3845f42d983e6f741b47bf212c227f26b12efc9d`; 296 tests, fixtures, dependencies and manifest hashes pass |
 | Optional extension | NOT IMPLEMENTED | B05 merged; A reviews bounded actual measurements |
 | Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
 
 A01–A07 and B01–B04 are present on verified main
-`38fe775067042f40e06e3cd05bce05ffabf00f6c`. C/D completion has not been
+`3845f42d983e6f741b47bf212c227f26b12efc9d`. C/D completion has not been
 verified here.
 
 When A releases a gate, record the exact merged main commit, passing commands, handoff links, and remaining limitations below. Contributors report status in their own task handoffs instead of editing this file.
@@ -94,8 +94,8 @@ supersedes this historical blocked state.
 
 ## G3 release — 24 November 2026
 
-Verified public main `38fe775067042f40e06e3cd05bce05ffabf00f6c` after PR #10
-merged A07. The corrected runner/analyzer source commit recorded in the evidence
+Verified public main `3845f42d983e6f741b47bf212c227f26b12efc9d` after PR #10
+merged A07 and PR #11 published G3. The corrected runner/analyzer source commit recorded in the evidence
 manifest is `636ba23f066b082eccc1d590e17f62608b2bd626`.
 
 ```bash
