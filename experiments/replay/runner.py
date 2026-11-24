@@ -109,6 +109,8 @@ class ChildServer(AbstractContextManager):
         self.log_file = self.log_path.open("wb")
         self.process = subprocess.Popen(command, cwd=ROOT, env=environment,
                                         stdout=self.log_file, stderr=subprocess.STDOUT)
+        # Startup timing intentionally excludes the Popen call itself; it covers
+        # readiness polling through the first healthy endpoint response.
         started = time.perf_counter_ns()
         deadline = time.monotonic() + 15
         while time.monotonic() < deadline:
@@ -533,7 +535,7 @@ def run(*, scenarios: tuple[str, ...] = SCENARIOS, trials: int = 1,
         "implementation": platform.python_implementation(),
         "scenarios": list(scenarios),
         "scenario_order": list(scenarios),
-        "trial_order": "1..N within each scenario",
+        "trial_order": "trial-major: for each trial 1..N, scenarios run in scenario_order",
         "trials_per_scenario": trials,
         "expected_trial_denominator": trials,
         "scenario_seed": None,
@@ -546,7 +548,7 @@ def run(*, scenarios: tuple[str, ...] = SCENARIOS, trials: int = 1,
         "worker_counts": list(WORKERS),
         "modes": list(MODES),
         "timing": {"request": "time.perf_counter_ns around loopback HTTP request",
-                   "startup": "time.perf_counter_ns from process spawn to healthy endpoint",
+                   "startup": "time.perf_counter_ns from Popen return until healthy endpoint response",
                    "separation": "deterministic validation and timed intervals recorded separately"},
         "time_reasons": "Expected categories are computed from released ticket/authenticator checks; server exposes only stable invalid_authentication publicly.",
         "raw_records": "requests.jsonl; request bodies and bearer artifacts are excluded",

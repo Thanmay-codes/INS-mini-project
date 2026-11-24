@@ -45,6 +45,12 @@ directory:
 - `environment.json`: Git HEAD, Python/platform details, scenario/config
   values, timing definitions, and the interpretation limit for time reasons.
 
+The `startup_ms` interval begins immediately after `subprocess.Popen` returns
+and ends when the first healthy `/health` response is observed. It includes
+health polling and excludes time spent inside the process-creation call itself.
+`trial_order` describes the actual trial-major execution: for each trial from 1
+through N, the selected scenarios run in `scenario_order`.
+
 ## Analyze actual runs
 
 B04's deterministic analyzer consumes one or more B03 run directories. Generate

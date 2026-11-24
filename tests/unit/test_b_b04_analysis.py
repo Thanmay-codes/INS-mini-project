@@ -151,3 +151,67 @@ def test_observed_e08_boundary_is_not_duplicated_as_missing():
     assert len(observed) == 1
     assert observed[0]["observed_attempts"] == 1
     assert observed[0]["no_time_rejection_expected_count"] == 1
+
+
+def _e04_attempts(trials, *, omit=()):
+    mutations = ("ticket", "authenticator", "body", "service")
+    return [
+        _attempt("E04", trial, f"mutated_{mutation}", 401 if mutation != "body" else 400,
+                 mode="authenticator_cache", index=index)
+        for trial in range(1, trials + 1)
+        for index, mutation in enumerate(mutations, 1)
+        if (trial, mutation) not in omit
+    ]
+
+
+def test_e04_each_phase_has_one_attempt_per_requested_trial():
+    phases = ("mutated_ticket", "mutated_authenticator", "mutated_body", "mutated_service")
+    for trial_count in (1, 3):
+        rows = scenario_summary(
+            "synthetic-e04-complete",
+            {"trials_per_scenario": trial_count, "scenarios": ["E04"]},
+            _e04_attempts(trial_count),
+        )
+        e04 = [row for row in rows if row["scenario"] == "E04"]
+        assert {row["phase"] for row in e04} == set(phases)
+        assert all(row["expected_attempt_denominator"] == trial_count
+                   and row["observed_attempts"] == trial_count
+                   and row["missing_attempts"] == 0
+                   and row["missing_trials"] == 0 for row in e04)
+
+
+def test_e04_reports_partial_and_entirely_missing_phase_observations():
+    metadata = {"trials_per_scenario": 3, "scenarios": ["E04"]}
+    attempts = _e04_attempts(
+        3, omit=((2, "ticket"), (1, "body"), (2, "body"), (3, "body"),
+                 (1, "service"), (2, "service"), (3, "service")),
+    )
+    rows = scenario_summary("synthetic-e04-incomplete", metadata, attempts)
+    by_phase = {row["phase"]: row for row in rows if row["scenario"] == "E04"}
+    assert (by_phase["mutated_ticket"]["expected_attempt_denominator"],
+            by_phase["mutated_ticket"]["observed_attempts"],
+            by_phase["mutated_ticket"]["missing_attempts"]) == (3, 2, 1)
+    assert (by_phase["mutated_body"]["expected_attempt_denominator"],
+            by_phase["mutated_body"]["observed_attempts"],
+            by_phase["mutated_body"]["missing_attempts"]) == (3, 0, 3)
+    assert (by_phase["mutated_service"]["observed_trials"],
+            by_phase["mutated_service"]["missing_trials"]) == (0, 3)
+
+
+def test_e02_and_e03_keep_two_attempts_per_trial_in_shared_phase():
+    trials = 3
+    attempts = [
+        _attempt("E02", trial, "exact_duplicate", status, index=index)
+        for trial in range(1, trials + 1)
+        for index, status in ((1, 200), (2, 409))
+    ] + [
+        _attempt("E03", trial, "fresh_authenticator", 200, index=index)
+        for trial in range(1, trials + 1)
+        for index in (1, 2)
+    ]
+    rows = scenario_summary("synthetic-e02-e03", {"trials_per_scenario": trials}, attempts)
+    for scenario in ("E02", "E03"):
+        row = next(item for item in rows if item["scenario"] == scenario)
+        assert row["expected_attempt_denominator"] == trials * 2
+        assert row["observed_attempts"] == trials * 2
+        assert row["missing_attempts"] == 0

@@ -15,9 +15,10 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED_ATTEMPTS_PER_TRIAL = {
-    "E01": 1, "E02": 2, "E03": 2, "E04": 4, "E06": 1,
+    "E01": 1, "E02": 2, "E03": 2, "E04": 1, "E06": 1,
     "E07": 1, "E08": 1, "E09": 1, "E10": 1,
 }
+E04_PHASES = ("mutated_ticket", "mutated_authenticator", "mutated_body", "mutated_service")
 
 
 class AnalysisError(ValueError):
@@ -68,6 +69,9 @@ def scenario_summary(source: str, metadata: dict[str, Any],
     groups: dict[tuple[str, str, str, int, int], list[dict[str, Any]]] = {}
     for record in attempts:
         groups.setdefault(_condition(record), []).append(record)
+    if "E04" in metadata.get("scenarios", []):
+        for phase in E04_PHASES:
+            groups.setdefault(("E04", "authenticator_cache", phase, 1, 0), [])
     rows: list[dict[str, Any]] = []
     for (scenario, mode, phase, workers, offset), records in sorted(groups.items()):
         expected_each = workers if scenario == "E05" else EXPECTED_ATTEMPTS_PER_TRIAL.get(scenario, 1)

@@ -65,7 +65,13 @@ def test_real_process_smoke_runs_e01_through_e10(tmp_path):
     metadata = json.loads((output / "environment.json").read_text())
     assert metadata["expected_trial_denominator"] == 1
     assert metadata["scenario_order"] == list(SCENARIOS)
+    assert metadata["trial_order"] == (
+        "trial-major: for each trial 1..N, scenarios run in scenario_order"
+    )
     assert metadata["scenario_seed"] is None
+    assert metadata["timing"]["startup"] == (
+        "time.perf_counter_ns from Popen return until healthy endpoint response"
+    )
 
     e02 = [attempt for attempt in attempts if attempt.scenario == "E02"]
     assert [(item.mode, item.status) for item in e02] == [
