@@ -1,20 +1,20 @@
 # Release status — lead-owned
 
-Updated 24 November 2026. G1/G2 are released. A07's corrected, reviewed evidence
-is prepared on `work/a07-evidence-final`; G3 remains NOT RELEASED until that work
-is merged and verified on the exact resulting main commit.
+Updated 24 November 2026. G1/G2/G3 are released. G3 evidence was verified on
+merged main `38fe775067042f40e06e3cd05bce05ffabf00f6c`; this release record is
+prepared on `work/g3-release` for human publication.
 
 | Gate | State | Required evidence |
 | --- | --- | --- |
 | G1 shared core | RELEASED | A01–A03 verified at main `20efbae763774af69337e6c97d3b0f29f9ba5092`; 134 tests and fixture checks pass |
 | G2 normal flow | RELEASED | A04/B01/B02/A05 verified at main `82915dfd63e873d75733e021cdac17e0ec369b25`; 254 tests and fixture checks pass |
-| G3 reviewed core results | NOT RELEASED | A07 branch merge plus merged-main verification of reviewed E01–E10 evidence |
+| G3 reviewed core results | RELEASED | A07 evidence verified on main `38fe775067042f40e06e3cd05bce05ffabf00f6c`; 296 tests, fixtures, dependencies and manifest hashes pass |
 | Optional extension | NOT IMPLEMENTED | B05 merged; A reviews bounded actual measurements |
 | Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
 
-A01–A06 and B01–B04 are present, along with B's reporting correction, on main
-`636ba23f066b082eccc1d590e17f62608b2bd626`. A07's reviewed evidence is ready on
-`work/a07-evidence-final`; C/D completion has not been verified here.
+A01–A07 and B01–B04 are present on verified main
+`38fe775067042f40e06e3cd05bce05ffabf00f6c`. C/D completion has not been
+verified here.
 
 When A releases a gate, record the exact merged main commit, passing commands, handoff links, and remaining limitations below. Contributors report status in their own task handoffs instead of editing this file.
 
@@ -75,19 +75,45 @@ satisfied. B04 follows B03, and A07 waits for both A06 and B04. G3 remains
 NOT RELEASED. B should reconcile its older client usage page; A06 should handle
 the platform-specific permission assertion without claiming Windows ACL checks.
 
-## A07 review — 24 November 2026, publication blocked
+## A07 initial audit — 24 November 2026, corrected before publication
 
-Base: `05422d01232607f609983e770f82e86d3333e5b2`. Regenerated smoke:
+Base: `05422d01232607f609983e770f82e86d3333e5b2`. This initial audit regenerated:
 46 attempts across E01–E10; repeated E01–E03: 300 attempts / 30 trials per
 scenario. No unexpected outcomes or transport failures. Functional/counter and
 latency calculations were independently checked; these remain unapproved audit
 observations. See [A07 handoff](../handoffs/A/A07.md) and
 [preliminary findings](../report/content/lead/core-findings.md).
 
-Blocking B-owned work: correct per-phase E04 denominators (currently 4 expected
+It requested B-owned corrections to the per-phase E04 denominators (then 4 expected
 versus 1 actual per phase/trial), actual trial-major ordering metadata, and
 startup timer boundary/label. No B-owned files or released interfaces were edited.
 
-Resume evidence regeneration/review after corrections are merged. Do not mark A07
-complete merely because its blocker note is merged. No approved evidence exists
-in results/published; G3, optional extension and final paper gates are unchanged.
+The correction merged at `636ba23f066b082eccc1d590e17f62608b2bd626`; A then
+regenerated and published reviewed evidence through A07. The G3 release below
+supersedes this historical blocked state.
+
+## G3 release — 24 November 2026
+
+Verified public main `38fe775067042f40e06e3cd05bce05ffabf00f6c` after PR #10
+merged A07. The corrected runner/analyzer source commit recorded in the evidence
+manifest is `636ba23f066b082eccc1d590e17f62608b2bd626`.
+
+```bash
+.venv/bin/python -m pytest -q --tb=short
+.venv/bin/python docs/contracts/verify-fixtures.py
+.venv/bin/python -m pip check
+.venv/bin/python -m json.tool results/published/a07-20261124/manifest.json >/dev/null
+```
+
+Results: **296 passed** on Linux/Python 3.14.8; the A01 fixture verifier and
+dependency check passed. All five tracked evidence-artifact hashes match
+`results/published/a07-20261124/manifest.json`, whose raw-source hashes and
+commands make the reviewed E01–E10 smoke run and 30-trial E01–E03 run traceable.
+Evidence: [A07 handoff](../handoffs/A/A07.md),
+[core findings](../report/content/lead/core-findings.md), and
+[published manifest](../../results/published/a07-20261124/manifest.json).
+
+G3 permits B06 methods/results drafting and A08 after B06's merge. B05/A09 is
+optional and remains outside G3. This release still does not establish production
+Kerberos/AD behavior, NTP compromise, power-loss durability, distributed replay
+protection or exactly-once response recovery.

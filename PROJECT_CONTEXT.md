@@ -31,14 +31,13 @@ Older proposal, architecture, college-conference, and roadmap files are backgrou
 
 ## Current implementation status
 
-G1 and G2 are released. A06, B03 runner, B04 analyzer and the B A07 reporting
-correction are merged on verified main `636ba23f066b082eccc1d590e17f62608b2bd626`.
-The core application,
+G1, G2 and G3 are released. A06, B03 runner, B04 analyzer, B's A07 reporting
+correction and A07 evidence are merged on verified main
+`38fe775067042f40e06e3cd05bce05ffabf00f6c`. The core application,
 launcher, shared crypto/state and security review exist. A06 corrected the
 POSIX-only permission-test assumption; Windows ACLs remain unverified.
 
-A07 is complete on local `work/a07-evidence-final`, based on corrected main, and
-is ready for human review/merge. Fresh regeneration produced 46 E01–E10 smoke
+A07 is merged and its G3 evidence was rechecked on exact main. Fresh regeneration produced 46 E01–E10 smoke
 attempts plus 300 E01–E03 attempts across 30 trials per scenario, with zero
 failed or transport attempts. Independent record checks reproduced 30/30
 no-cache versus 0/30 cache duplicate grants, 0/90 legitimate rejections per
@@ -47,10 +46,10 @@ E05 worker-count condition, restart replay rejection and declared offset/boundar
 outcomes. Sanitized outputs and provenance are tracked in
 `results/published/a07-20261124/`; raw inputs remain ignored.
 
-G3 remains unreleased until the A07 completion branch is merged and these
-evidence references are rechecked on the resulting main commit. Optional
-password experiments and final manuscript/presentation remain pending. No
-production Kerberos/AD, NTP exploitation, power-loss or exactly-once claim is made.
+The G3 release record is prepared on `work/g3-release`; its evidence source is
+the tracked `results/published/a07-20261124/` manifest. Optional password
+experiments and final manuscript/presentation remain pending. No production
+Kerberos/AD, NTP exploitation, power-loss or exactly-once claim is made.
 
 The new global instruction path `/home/thanmay/.agents/main.md` was requested but
 is absent on this machine; project instructions were available and followed.
@@ -60,9 +59,8 @@ minor B-owned login username-schema follow-up remain outside this evidence task.
 
 ## Next work
 
-Human reviews and merges `work/a07-evidence-final`; A then verifies the exact
-merged main commit and records the G3 release. B06 methods/results drafting and
-A08 scientific content may start only after that release. B05/A09 remains
-optional and is not implied by G3.
+Human reviews and merges `work/g3-release`. Then B starts B06 from that updated
+main to draft implementation-faithful methods/results from published evidence.
+A08 follows B06's merge. B05/A09 remains optional and is not implied by G3.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
