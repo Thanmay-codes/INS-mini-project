@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "evidence_id": "a09-extension-20261124",
+  "review_status": "A09 reviewed optional extension evidence prepared on work/a09-extension-review; merge into main required before final paper citation.",
+  "approval_meaning": "Sanitized E11-E12 summaries for the optional Kerberoasting-inspired mechanism demonstration. They illustrate bounded dictionary inclusion vs. exclusion under fixed local parameters and do not establish Active Directory cracking speed, Windows Event 4769 detection, or password uncrackability.",
+  "producing_code": {
+    "git_commit": "34a20a554d1fe0c625d24ace746b48960783653f",
+    "runner_sha256": "fe34fcc248bfa7640c2afd7d9c01c8c6b6da426888854dafc5b4f8898a814794"
+  },
+  "commands": [
+    ".venv/bin/python experiments/kerberoasting/runner.py --output-dir results/raw/a09-extension-20261124"
+  ],
+  "source_runs": [
+    {
+      "id": "a09-extension-20261124",
+      "cases": ["E11", "E12"],
+      "sha256": {
+        "results.jsonl": "43cee134e845e72007879f788e2006d64f0248041e1587beeadbfce0e8dc6809",
+        "summary.csv": "64d1dd1f8b766f1df5678a1ec9f1a399bf35281fa673c30225804791a24a55dc",
+        "environment.json": "90fbfb85bf4b82a9c49a25053358fa13dd6d053185e4b3899810571eeda0d0d0"
+      }
+    }
+  ],
+  "configuration": {
+    "cipher": "AES-256-GCM",
+    "kdf_algorithm": "pbkdf2_hmac_sha256",
+    "salt_bytes": 16,
+    "iterations": 100000,
+    "wordlist_path": "data/wordlists/demo.txt",
+    "wordlist_size": 5,
+    "budget_attempts": 5,
+    "network_calls_during_verification": 0
+  },
+  "reviewed_findings": {
+    "E11_weak_in_list": {
+      "attempts": 4,
+      "matched_candidate_index": 4,
+      "elapsed_ms": 113.9911,
+      "recovered": true,
+      "outcome": "recovered"
+    },
+    "E12_random_absent": {
+      "attempts": 5,
+      "matched_candidate_index": null,
+      "elapsed_ms": 165.0101,
+      "recovered": false,
+      "outcome": "not_recovered_within_list_budget"
+    }
+  },
+  "limitations": [
+    "Kerberoasting-inspired local mechanism demo using AES-256-GCM and PBKDF2-HMAC-SHA256, not Active Directory RC4 or RFC 3962 AES string-to-key.",
+    "Uses the bundled 5-word demonstration list (data/wordlists/demo.txt); non-recovery in E12 establishes only absence from this list within the 5-attempt budget, not uncrackability.",
+    "AES alone does not prevent offline guessing of weak passwords; acquisition and offline verification are kept separate, and no Windows Event 4769 detection is claimed."
+  ],
+  "published_files_sha256": {
+    "summary.csv": "64d1dd1f8b766f1df5678a1ec9f1a399bf35281fa673c30225804791a24a55dc"
+  }
+}

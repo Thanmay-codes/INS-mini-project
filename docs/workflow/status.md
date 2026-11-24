@@ -9,7 +9,7 @@ record are merged on verified public main
 | G1 shared core | RELEASED | A01–A03 verified at main `20efbae763774af69337e6c97d3b0f29f9ba5092`; 134 tests and fixture checks pass |
 | G2 normal flow | RELEASED | A04/B01/B02/A05 verified at main `82915dfd63e873d75733e021cdac17e0ec369b25`; 254 tests and fixture checks pass |
 | G3 reviewed core results | RELEASED | A07 evidence verified on main `3845f42d983e6f741b47bf212c227f26b12efc9d`; 296 tests, fixtures, dependencies and manifest hashes pass |
-| Optional extension | NOT IMPLEMENTED | B05 merged; A reviews bounded actual measurements |
+| Optional extension | REVIEW PREPARED | B05 merged at `34a20a5`; A09 evidence prepared on `work/a09-extension-review` |
 | Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
 
 A01–A07 and B01–B04 are present on verified main

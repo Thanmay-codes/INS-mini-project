@@ -60,7 +60,8 @@ minor B-owned login username-schema follow-up remain outside this evidence task.
 ## Next work
 
 Next, B starts B06 from fresh `main` to draft implementation-faithful
-methods/results from published evidence. A08 follows B06's merge. B05/A09
-remains optional and is not implied by G3.
+methods/results from published evidence. B05 is merged on `main` (`34a20a5`),
+and A09's reviewed extension evidence is prepared on `work/a09-extension-review`
+for human merge. A08 follows B06's merge.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.
