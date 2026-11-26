@@ -1,0 +1,26 @@
+sequenceDiagram
+    autonumber
+    participant Client as CLI client
+    participant AS as AS (inside KDC process)
+    participant TGS as TGS (inside same KDC process)
+    participant RS as Separate resource server
+
+    Note over Client,RS: Draft flow; the custom JSON message format is an educational simulator, not Kerberos wire protocol.
+    Client->>AS: POST /login (synthetic username and password)
+    AS->>AS: Verify password; create TGT for audience tgs and Kc,tgs
+    AS-->>Client: TGT + Kc,tgs delivered separately (local simulator)
+
+    Client->>TGS: POST /service-ticket (TGT + authenticator MACed with Kc,tgs)
+    Note right of Client: Authenticator binds request context and a fresh request_nonce.
+    TGS->>TGS: Validate TGT audience tgs, time, identity, MAC; consume TGS request
+    TGS->>TGS: Create service ticket for audience files and Kc,files
+    TGS-->>Client: Service ticket + Kc,files delivered separately (local simulator)
+
+    loop Each resource request
+        Client->>Client: Create fresh request_nonce; MAC authenticator with Kc,files
+        Client->>RS: POST /access-resource (service ticket + body + authenticator)
+        Note right of RS: The service ticket is for audience files; RS never accepts a TGT.
+        RS->>RS: Validate service ticket, request context, timestamp, nonce and MAC
+        RS->>RS: Apply selected replay-cache mode; execute increment on acceptance
+        RS-->>Client: Grant or stable error (e.g. 409 replay_detected)
+    end

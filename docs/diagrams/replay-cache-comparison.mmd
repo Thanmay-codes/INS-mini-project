@@ -1,0 +1,22 @@
+flowchart TD
+    S["Prepare one valid service ticket and one valid request<br/>Keep ticket, authenticator, nonce, body and MAC identical"]
+    S --> F{"Compare from equivalent clean run state"}
+
+    F --> N["authenticator_no_cache<br/>Intentionally incomplete control"]
+    F --> Y["authenticator_cache<br/>Atomic persistent replay tracking"]
+
+    N --> NV["Validate ticket and session-key MAC<br/>Do not consume request identity"]
+    NV --> NA["First copy: accepted"]
+    NA --> NR["Exact duplicate: accepted again<br/>if all other checks remain valid"]
+
+    Y --> YV["Perform the same ticket and authenticator validation"]
+    YV --> YC["Atomically consume<br/>(namespace, service_id, ticket_id, request_nonce)<br/>with protected increment"]
+    YC --> YA["First copy: accepted; operation commits"]
+    YC --> YD["Exact duplicate: 409 replay_detected<br/>no second operation commit"]
+
+    T["TGS replay consumption is always enabled and unchanged in both resource modes."]
+    T -.-> F
+    L["A fresh legitimate request uses the same valid service ticket but a newly generated, authenticated request_nonce; both modes may accept it."]
+    L -.-> YV
+    D["DRAFT DIAGRAM: pending A/B label review. The message format is an educational simulator, not Kerberos wire protocol."]
+    D -.-> S
