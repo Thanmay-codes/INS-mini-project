@@ -1,0 +1,25 @@
+flowchart LR
+    C["CLI client"]
+
+    subgraph KDC["KDC process"]
+        AS["Authentication Service (AS)"]
+        TGS["Ticket-Granting Service (TGS)"]
+    end
+
+    subgraph RS["Separate resource-server process"]
+        V["Validate service ticket, audience files, and request authenticator"]
+        RC["Replay mode: authenticator_cache or authenticator_no_cache"]
+        OP["Protected increment operation"]
+        V --> RC --> OP
+    end
+
+    DB[("Persistent SQLite replay store")]
+    C -->|"POST /login: credentials"| AS
+    AS -->|"Issue TGT: audience tgs + client/TGS session key (separate delivery)"| C
+    C -->|"POST /service-ticket: TGT + TGS-session-key-authenticated request"| TGS
+    TGS -->|"Service ticket: audience files + client/service session key (separate delivery)"| C
+    C -->|"POST /access-resource: service ticket + fresh nonce + service-session-key MAC"| V
+    RC -.->|"Atomic consume in cache mode"| DB
+
+    N["DRAFT DIAGRAM: pending A/B label review. Educational simulator message format and local key delivery, not Kerberos wire protocol."]
+    N -.-> KDC
