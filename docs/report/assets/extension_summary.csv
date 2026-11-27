@@ -1,0 +1,3 @@
+case_id,password_class,cipher,kdf_algorithm,salt_bytes,iterations,wordlist_size,budget_attempts,budget_seconds,attempts,matched_candidate_index,elapsed_ms,recovered,outcome
+E11,weak_in_list,AES-256-GCM,pbkdf2_hmac_sha256,16,100000,5,5,,4,4,113.9911,true,recovered
+E12,random_absent,AES-256-GCM,pbkdf2_hmac_sha256,16,100000,5,5,,5,,165.0101,false,not_recovered_within_list_budget
