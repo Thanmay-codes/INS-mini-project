@@ -1,6 +1,6 @@
 # Project context for future chats
 
-Last updated: 24 November 2026 (Asia/Kolkata).
+Last updated: 27 November 2026 (Asia/Kolkata).
 
 ## User's goal and constraints
 
@@ -59,9 +59,10 @@ minor B-owned login username-schema follow-up remain outside this evidence task.
 
 ## Next work
 
-Next, B starts B06 from fresh `main` to draft implementation-faithful
-methods/results from published evidence. B05 is merged on `main` (`34a20a5`),
-and A09's reviewed extension evidence is prepared on `work/a09-extension-review`
-for human merge. A08 follows B06's merge.
+All planned tasks (`A01`–`A09`, `B00`–`B06`, `C01`–`C03`, `D01`–`D03`) plus the
+KDC username-schema `400` conformance fix (`abf1ef8`) are merged on `main`
+(`9a112f54cc1df08494425b12241a0dfde9ac9de7`). The remaining step is formatting
+`docs/report/manuscript/paper.md` once the professors supply the conference
+template, page limit, author list, and deadline.
 
 Only A updates this file after integration, recording completed checks and the next unfinished task. B/C/D write their own task handoffs instead, preventing concurrent central-file edits. Keep secrets, active tickets, replay databases, logs, and unreviewed raw outputs in ignored paths.

@@ -1,20 +1,20 @@
 # Release status — lead-owned
 
-Updated 24 November 2026. G1/G2/G3 are released. G3 evidence and the release
-record are merged on verified public main
-`3845f42d983e6f741b47bf212c227f26b12efc9d` (PR #11).
+Updated 27 November 2026. G1/G2/G3, optional extension (B05/A09), technical
+drafts (B06/A08), diagrams/presentation (C01–C03), and neutral manuscript
+assembly (D01–D03) are merged on verified public main
+`9a112f54cc1df08494425b12241a0dfde9ac9de7` (PR #20).
 
 | Gate | State | Required evidence |
 | --- | --- | --- |
 | G1 shared core | RELEASED | A01–A03 verified at main `20efbae763774af69337e6c97d3b0f29f9ba5092`; 134 tests and fixture checks pass |
 | G2 normal flow | RELEASED | A04/B01/B02/A05 verified at main `82915dfd63e873d75733e021cdac17e0ec369b25`; 254 tests and fixture checks pass |
 | G3 reviewed core results | RELEASED | A07 evidence verified on main `3845f42d983e6f741b47bf212c227f26b12efc9d`; 296 tests, fixtures, dependencies and manifest hashes pass |
-| Optional extension | REVIEW PREPARED | B05 merged at `34a20a5`; A09 evidence prepared on `work/a09-extension-review` |
-| Final paper package | NOT PREPARED | A08/B06 technical approval; C/D packaging and format checks |
+| Optional extension | RELEASED | B05 merged at `34a20a5`; A09 reviewed evidence merged at `5df55aa`; 310 tests pass after KDC username-schema fix (`abf1ef8`) |
+| Final paper package | NEUTRAL DRAFT READY | A08/B06, C01–C03, and D01–D03 merged at `9a112f5`; awaiting professor template, author names, and deadline |
 
-A01–A07 and B01–B04 are present on verified main
-`3845f42d983e6f741b47bf212c227f26b12efc9d`. C/D completion has not been
-verified here.
+A01–A09, B00–B06, C01–C03, and D01–D03 are all merged on verified main
+`9a112f54cc1df08494425b12241a0dfde9ac9de7`.
 
 When A releases a gate, record the exact merged main commit, passing commands, handoff links, and remaining limitations below. Contributors report status in their own task handoffs instead of editing this file.
 

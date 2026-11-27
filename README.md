@@ -1,33 +1,56 @@
-# INS mini project: Kerberos-style authentication lab
+# Kerberos-Style Authentication & Replay Protection Lab
 
-**Academic title:** Experimental Security Analysis of Kerberos-Style Ticket Authentication.
-The longer submitted title is preserved in `docs/planning/original-plan.txt`; no
-change to the submitted topic is required.
+An educational Python/Flask simulator built for our Information and Network Security (INS) college project and conference paper.
 
-This college project implements a custom local Python/Flask ticket-authentication
-simulator. It compares identical session-key-authenticated requests with replay
-tracking disabled and enabled. Persistent atomic replay tracking, concurrent
-duplicates, ordinary process restart and controlled clock offsets are the core
-study. Bounded synthetic service-password guessing is a later extension.
+The project implements a local ticket-based authentication flow (AS, TGS, resource server, and CLI client) and evaluates **persistent, atomic replay protection** against an intentionally incomplete **no-cache control** under exact duplicates, concurrent workers, process restarts, and controlled clock offsets. It also includes a small, bounded offline service-password guessing demo (Kerberoasting-inspired).
 
-## Current status
+---
 
-Shared contracts, cryptography, settings/clocks, private setup, persistent stores,
-AS/TGS endpoints, the client and protected resource endpoint are implemented.
-A05 adds real-process normal/invalid-flow integration and the launcher below.
-See [gate status](docs/workflow/status.md): G1 is released; G2 requires A05's merge
-and passing checks on merged main. Experiment runners, reviewed measurements,
-figures and paper results are still pending. Passing tests are not paper results.
+## Architecture
 
-Use [project context](PROJECT_CONTEXT.md), [the implementation plan](docs/implementation-plan.md),
-[task prompts](docs/prompts/README.md) and [ownership/workflow](docs/workflow/README.md)
-for contributor instructions. Work in separate clones and follow released gates.
-The human handles Git commits, pushes and authentication.
+```text
+CLI Client
+  |  POST /login (synthetic username + password)
+  v
+KDC Process — AS & TGS (127.0.0.1:5000)
+  |  Returns AES-256-GCM TGT + session key
+  |  POST /service-ticket (TGT + HMAC-SHA-256 authenticator)
+  |  Returns AES-256-GCM service ticket + session key
+  v
+Resource Server (127.0.0.1:5001)
+  |  POST /access-resource (service ticket + fresh nonce + HMAC authenticator)
+  |  Validates ticket, audience, context, body digest, and time bounds
+  v
+SQLite Replay Store & Counter (atomic BEGIN IMMEDIATE transaction)
+```
 
-## Install and initialize
+Editable Mermaid architecture, sequence, and comparison diagrams are in [docs/diagrams/](docs/diagrams/README.md).
 
-Python 3.11+ is required. From the repository root on Linux/macOS:
+---
 
+## Summary of Measured Results
+
+All numbers below come from the reviewed, sanitized datasets in [results/published/a07-20261124/](results/published/a07-20261124/manifest.json) and [results/published/extension/](results/published/extension/manifest.json).
+
+| Experiment | What was tested | Observed outcome |
+| --- | --- | --- |
+| **E01–E03 (30 trials each)** | Exact duplicate replay vs. legitimate fresh requests (300 requests total) | No-cache accepted **30/30** duplicates; persistent cache accepted **0/30** (`409 replay_detected`). Legitimate rejections: **0/90** in both modes. |
+| **E04 (smoke)** | Modified ticket, authenticator, body, and service audience | All 4 mutation phases rejected (`401` / `400`), 0 missing attempts. |
+| **E05 (smoke)** | 2, 4, and 8 concurrent worker processes sharing one SQLite store | Defended mode committed exactly **1** operation (`counter = 1`) in every worker-count condition. |
+| **E06 & E10 (smoke)** | Replay after ordinary process restart and ±15 s logical clock shifts | Previously consumed requests stayed rejected (`409`). |
+| **E07 & E08 (smoke)** | Clock offsets (−60 to +60 s) and ticket validity edges (−31 to +331 s) | Matched the inclusive ±30 s skew and leeway rules. |
+| **E09 (smoke)** | Missing or corrupt SQLite replay store | Failed closed with `503 replay_state_unavailable`. |
+| **E11–E12 (extension)** | Offline PBKDF2-SHA256 + AES-GCM guessing on a 5-word demo list | Weak password in list recovered in **4/5** attempts (`113.99 ms`); random absent password not recovered in **5/5** attempts (`165.01 ms`). |
+
+---
+
+## Quick Start
+
+Python **3.11+** is required (validated locally on Linux / Python 3.14.8).
+
+### 1. Install dependencies
+
+**Linux / macOS:**
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -35,8 +58,7 @@ python -m pip install -r requirements.lock.txt
 python -m pip install -e '.[dev]'
 ```
 
-On Windows PowerShell:
-
+**Windows PowerShell:**
 ```powershell
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
@@ -44,120 +66,98 @@ python -m pip install -r requirements.lock.txt
 python -m pip install -e ".[dev]"
 ```
 
-The lock snapshot was validated locally on Python 3.14; the supported dependency
-ranges are in `pyproject.toml`. Revalidate installation on other environments.
-B reported that an existing POSIX permission-mode assertion fails on Windows;
-Windows ACL protection is not established by that assertion. See the A05 handoff.
+### 2. Initialize a private run
 
-Create a **new** private run and choose a synthetic password at the hidden prompt:
+Create a fresh run directory and enter a synthetic password at the prompt (there is no default password):
 
 ```bash
 python scripts/init_demo.py --run-dir data/private/demo-001
 ```
 
-Use this same password for client login. There is no default password. Keys,
-password verifier, tickets, captures and SQLite state stay in ignored private
-paths. Existing directories are refused. To reset an independent experiment,
-stop its servers and choose a new directory, e.g. `data/private/demo-002`.
-Preserve the directory for restart tests; never recreate a lost replay database
-while continuing that run. See [setup details](docs/contracts/setup-v1.md).
+Keys, password verifiers, captures, and SQLite databases stay inside ignored `data/private/` paths. To reset an experiment, stop the servers and pick a new directory name (for example `data/private/demo-002`).
 
-## Start, access and replay
-
-In the activated environment, start both servers:
+### 3. Start the servers
 
 ```bash
 python scripts/run_lab.py --run-dir data/private/demo-001
 ```
 
-Keep that terminal open. Activate the environment in another terminal, then run:
+Keep this terminal open (press `Ctrl+C` to stop both servers cleanly).
+
+### 4. Run the client and test a replay
+
+In a second terminal with `.venv` activated:
 
 ```bash
+# Check both servers
 python -m kerberos_lab.client
+
+# Log in, fetch a service ticket, execute 2 fresh requests, and capture them
 python -m kerberos_lab.client run --run-dir data/private/demo-001 --count 2 --capture
 ```
 
-The first command prints two health responses with `stage: implemented`.
-The second prompts for the synthetic password, logs in, obtains a service ticket
-and performs two increments with fresh authenticators on that ticket. For a fresh
-run, the returned counters are 1 and 2. Output includes each saved relative
-capture path, such as `captures/resource-<nonce>.json`.
-
-To replay one, use its actual filename without the `captures/` prefix:
+The command prints each saved capture path (for example `captures/resource-<nonce>.json`). Replay that exact request using its filename without the `captures/` prefix:
 
 ```bash
 python -m kerberos_lab.client replay --run-dir data/private/demo-001 --capture resource-<nonce>.json
 ```
 
-Replace `<nonce>` with the value printed by the client. In the default defended
-mode, an already-consumed request returns `replay_detected` with HTTP 409, and the
-CLI exits 1. Captures are bearer requests; keep them private.
+In the default defended mode (`authenticator_cache`), the replay returns HTTP `409 replay_detected` and exits with code `1`. To observe the intentionally incomplete control mode, initialize a separate run directory and start the launcher with `--defense-mode authenticator_no_cache`.
 
-Press **Ctrl+C in the launcher terminal** to stop both children. The launcher also
-stops the sibling if either child exits. On POSIX, SIGTERM is handled as graceful
-shutdown. Force-killing the launcher bypasses cleanup; stop surviving children
-before restarting on their ports.
+For custom ports, TOML configuration, and logical clock offsets, see [docs/contracts/runtime-v1.md](docs/contracts/runtime-v1.md) and [docs/usage/client.md](docs/usage/client.md).
 
-For the intentionally incomplete comparison mode, initialize a separate fresh
-run, then pass `--defense-mode authenticator_no_cache` to the launcher. It keeps
-ticket/MAC/context/time validation and the committed counter but omits duplicate
-tracking. The same captured request can therefore increment again while valid.
+---
 
-## Runtime controls
+## Running Experiments and Tests
 
-Defaults are KDC `http://127.0.0.1:5000` and resource
-`http://127.0.0.1:5001`. Bind addresses are fixed to loopback; debugger and reloader
-are off. If you change ports, pass matching URLs to the client:
-
-```bash
-python scripts/run_lab.py --run-dir data/private/demo-001 --kdc-port 5100 --resource-port 5101
-python -m kerberos_lab.client health --kdc-url http://127.0.0.1:5100 --resource-url http://127.0.0.1:5101
-python -m kerberos_lab.client run --run-dir data/private/demo-001 --kdc-url http://127.0.0.1:5100 --resource-url http://127.0.0.1:5101
-```
-
-Run the launcher in its own terminal. For independent worker control:
-
-```bash
-python -m kerberos_lab.kdc.app --run-dir data/private/demo-001 --port 5000
-python -m kerberos_lab.resource_server.app --run-dir data/private/demo-001 --port 5001
-```
-
-Each independent process needs its own terminal and stop command. Resource workers
-may share one run directory/service key/store on distinct ports. The launcher
-also supports `--config configs/replay.example.toml`, role-specific logical clock
-offsets/frozen times and resource defense mode. See [runtime controls](docs/contracts/runtime-v1.md).
-Clock injection never changes the host clock. The client CLI uses real time, so
-use the injectable Python client clock for frozen-time tests.
-
-## Verify
-
+**Run the full test suite and contract fixture checks (310 tests):**
 ```bash
 python -m pytest -q --tb=short
 python docs/contracts/verify-fixtures.py
 python -m pip check
 ```
 
-A05 integration tests run the actual launcher, KDC, client and resource processes
-over loopback, with temporary private state. Earlier B02 tests retain an explicitly
-labeled resource stub; those alone do not establish the full flow. Linux is the
-locally verified integration platform. No E01–E10 measurement matrix is claimed
-by these correctness checks.
+**Run the E01–E10 replay experiments and analyzer:**
+```bash
+# 1-trial smoke run across E01-E10
+python experiments/replay/runner.py --trials 1 --output-dir results/raw/smoke-run
 
-## Workspace and study limits
+# 30-trial comparison across E01-E03
+python experiments/replay/runner.py --scenarios E01,E02,E03 --trials 30 --output-dir results/raw/perf-30
 
-- `src/kerberos_lab/`: shared helpers, KDC, resource service and client.
-- `scripts/`: private setup and local launcher.
-- `tests/`: unit, integration and security checks.
-- `configs/`: non-secret TOML settings.
-- `data/private/`, `logs/`, `results/raw/`: ignored runtime artifacts.
-- `experiments/`: planned runners and analysis; `results/published/`: reviewed evidence.
-- `docs/`: contracts, plans, handoffs, references, diagrams, paper and presentation.
+# Generate summary tables and latency SVG into an ignored folder
+python experiments/analysis/analyze.py results/raw/smoke-run results/raw/perf-30 --output-dir results/figures/review-run
+```
 
-This is Kerberos-style, not Kerberos wire compatibility or Active Directory.
-Local login delivers synthetic credentials/session material over loopback JSON,
-an explicit educational simplification. Replay caching is an established defense;
-we claim an evaluated student implementation, not a new protocol or vulnerability.
-The optional password experiment will be Kerberoasting-inspired, with bounded
-synthetic data. A dictionary miss only shows non-recovery within its stated budget.
-Ordinary process persistence does not establish power-loss durability, hostile
-filesystem rollback resistance or response recovery after a committed operation.
+**Run the optional E11–E12 offline password-guessing demo:**
+```bash
+python experiments/kerberoasting/runner.py --output-dir results/raw/kerberoasting-demo
+```
+
+Raw outputs stay in ignored `results/raw/` and `results/figures/` directories. See [docs/usage/experiments.md](docs/usage/experiments.md) and [docs/usage/setup-review.md](docs/usage/setup-review.md) for details.
+
+---
+
+## Repository Layout
+
+| Path | Contents |
+| --- | --- |
+| `src/kerberos_lab/` | Shared crypto, models, clocks, SQLite replay store, KDC (`kdc/`), resource server (`resource_server/`), and CLI client (`client/`). |
+| `scripts/` | Private run initializer (`init_demo.py`), dual-server launcher (`run_lab.py`), and workflow scope checker. |
+| `experiments/` | Replay/time/concurrency runner (`replay/`), analyzer (`analysis/`), and offline password-guessing demo (`kerberoasting/`). |
+| `tests/` | Unit, integration, and adversarial security tests (310 passing tests). |
+| `results/published/` | Reviewed, sanitized core (`a07-20261124/`) and extension (`extension/`) CSVs, SVG figure, and SHA-256 provenance manifests. |
+| `docs/report/manuscript/` | Assembled neutral paper draft ([paper.md](docs/report/manuscript/paper.md)) and verified bibliography ([references.bib](docs/report/manuscript/references.bib)). |
+| `docs/diagrams/` | Editable Mermaid diagrams for architecture, normal flow, and replay comparison. |
+| `docs/presentation/` | Slide deck outline, live demo script, and recorded-output fallback. |
+| `docs/contracts/` | Protocol v1, Python API v1, setup, and runtime control specifications. |
+
+---
+
+## Scope and Limitations
+
+- **Educational simulator:** Uses a custom JSON/HTTP format over loopback, AES-256-GCM tickets, and PBKDF2-SHA256 service keys. It does not implement Kerberos V5 ASN.1 wire formats, RFC 3962 string-to-key, or Active Directory interoperability.
+- **Evaluated implementation of established defenses:** Replay caching and session-key-authenticated nonces are established techniques ([RFC 4120 §3.2.3](https://www.rfc-editor.org/rfc/rfc4120.html#section-3.2.3)). This project evaluates a local implementation rather than claiming a new protocol or vulnerability.
+- **Persistence and failure model:** Tests verify ordinary process restarts and shared-store concurrency on one host. Power-loss durability, hostile filesystem rollback, distributed multi-host caches, and exactly-once response recovery after a dropped response are out of scope.
+- **Bounded password demo:** E11–E12 use a tiny 5-word list (`data/wordlists/demo.txt`) to illustrate why AES alone does not protect weak passwords; non-recovery means absence from that list within the budget, not uncrackability.
+- **Platform note:** Core integration and experiments were verified on Linux (Python 3.14.8). Native Windows ACL and console lifecycle checks remain unverified.
