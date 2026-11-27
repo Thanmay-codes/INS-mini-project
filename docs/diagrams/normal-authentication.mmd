@@ -5,7 +5,7 @@ sequenceDiagram
     participant TGS as TGS (inside same KDC process)
     participant RS as Separate resource server
 
-    Note over Client,RS: Draft flow; the custom JSON message format is an educational simulator, not Kerberos wire protocol.
+    Note over Client,RS: C03 prepared flow; the custom JSON message format is an educational simulator, not Kerberos wire protocol.
     Client->>AS: POST /login (synthetic username and password)
     AS->>AS: Verify password; create TGT for audience tgs and Kc,tgs
     AS-->>Client: TGT + Kc,tgs delivered separately (local simulator)

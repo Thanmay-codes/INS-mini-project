@@ -59,6 +59,24 @@ The first increment should return counter `1`. The duplicate replay is expected 
 
 **Speaking cue:** The replay cache atomically records the authenticated request identity with the protected increment. This manual demonstration uses separate fresh runs; it is illustrative, not the paired E01/E02 experiment.
 
+## Optional extension — bounded password demonstration
+
+Only if the presenter chooses to include the optional section, run it on the
+installed project environment and display only the sanitized result summary:
+
+```powershell
+python experiments/kerberoasting/runner.py --output-dir results/raw/c03-password-demo
+```
+
+Use [`summary.csv`](../../results/published/extension/summary.csv) as the
+presentation source, not a newly generated raw run. Label the output:
+
+> **RECORDED OUTPUT — A09-reviewed E11/E12 evidence from 2026-11-24; not live.**
+
+Explain that E11 recovered one weak candidate from a 5-word list and E12 did
+not recover a random absent password within the same 5-attempt budget. Do not
+call this an Active Directory Kerberoasting benchmark or a Windows event study.
+
 ## Concurrency, restart, and time evaluation
 
 For a reproducible one-trial smoke run of the actual implemented E05/E06/E07/E08/E10 scenarios, use a fresh terminal after the live demonstration:
@@ -80,14 +98,14 @@ If either process fails, do not imply that a recording is live. Switch to these 
 - Offset and ticket-boundary categories: [`time_categories.csv`](../../results/published/a07-20261124/time_categories.csv).
 - Optional descriptive timing visual only: [`request_latency.svg`](../../results/published/a07-20261124/request_latency.svg); do not claim a causal speedup.
 
-These are reviewed summaries, not terminal captures. No approved terminal transcript or screenshot bundle is tracked. Use the C01 diagram for an explanatory view of the flow, clearly identified as a draft diagram rather than a captured run.
+These are reviewed summaries, not terminal captures. No approved terminal transcript or screenshot bundle is tracked. Use the C03 Mermaid diagrams for an explanatory view of the flow, clearly identified as editable simulator diagrams rather than captured run output.
 
 ## Presenter limits and questions
 
 - The interactive comparison is not a controlled paired measurement. For exact duplicate rates, cite the approved E02 result: 30/30 accepted in no-cache versus 0/30 in cache mode.
 - E05–E10 approved evidence is a one-trial smoke run; E01–E03 are the repeated 30-trial scenarios. Avoid generalizing from the smoke run.
 - Do not present latency as a performance win. The approved manifest describes local timing limitations.
-- Do not show the optional password-guessing extension or claim any password result until A09 approves it.
+- The optional password-guessing extension may use only the A09-approved sanitized E11/E12 summary; do not present it as a live or AD benchmark.
 - If asked about compatibility, production guarantees, power loss, distributed state, or response recovery: these are outside the evidence and are listed in the G3 manifest.
 
 ## Remaining presentation inputs
