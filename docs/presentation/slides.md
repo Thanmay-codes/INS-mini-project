@@ -1,8 +1,8 @@
 # Presentation skeleton — Kerberos-style replay study
 
-**Draft:** neutral Markdown outline; conference template, final deck format, and allotted time were not supplied. Suggested delivery is 6–7 minutes. Convert only after the human chooses the publisher/deck format.
+**C03 result deck:** neutral Markdown outline; conference template, final deck format, and allotted time were not supplied. Suggested delivery is 6–7 minutes plus an optional 1-minute extension slide. Convert only after the human chooses the publisher/deck format.
 
-The sources are the C01 drafts in [`docs/diagrams/`](../diagrams/). They remain drafts pending A/B label review. This presentation describes a local educational simulator with a custom JSON message format, not Kerberos wire protocol or production deployment.
+The sources are the C01/C03 Mermaid sources in [`docs/diagrams/`](../diagrams/). This presentation describes a local educational simulator with a custom JSON message format, not Kerberos wire protocol or production deployment.
 
 ## Slide 1 — Motivation: authenticated requests can be replayed
 
@@ -77,10 +77,29 @@ The sources are the C01 drafts in [`docs/diagrams/`](../diagrams/). They remain 
 - Local SQLite persistence and ordinary process restart; not power-loss durability, distributed replay coordination, hostile rollback resistance, or exactly-once response recovery.
 - Time offsets are logical controls; no host-clock/NTP modification.
 - The no-cache mode is an intentionally incomplete comparison control, not a description of standard Kerberos deployments.
-- Optional synthetic service-password guessing is excluded from claimed results until A09 approves evidence.
+- Optional synthetic service-password guessing is included only in the clearly labeled optional extension slide below, because A09 published reviewed evidence for E11–E12.
 
-**Speaking cue:** State what the approved evidence measures and what it does not establish. No password-guessing result is included in this draft.
+**Speaking cue:** State what the approved evidence measures and what it does not establish.
+
+## Optional slide 7 — Bounded password-guessing extension
+
+**RECORDED OUTPUT — A09-reviewed, optional evidence; not a live run.**
+
+| Case | Fixed setting | Reviewed observation | Evidence |
+| --- | --- | --- | --- |
+| E11 weak password | AES-256-GCM; PBKDF2-HMAC-SHA256; 16-byte salt; 100,000 iterations; 5-candidate list | Recovered candidate 4 of 5 in 113.9911 ms. | [`summary.csv`](../../results/published/extension/summary.csv) |
+| E12 random password absent from list | Identical cipher/KDF/salt/budget | 5 of 5 candidates tried in 165.0101 ms; `not_recovered_within_list_budget`. | [`summary.csv`](../../results/published/extension/summary.csv) |
+
+**Speaking cue:** This is a Kerberoasting-inspired local mechanism demonstration, not Active Directory RC4/RFC 3962 behavior or Windows Event 4769 detection. E12 does not establish that the password is uncrackable.
 
 ## Fallback for live-process failure
 
-Switch to the approved published files in [`results/published/a07-20261124/`](../../results/published/a07-20261124/) and label every displayed table or figure **RECORDED OUTPUT — A07/G3 approved, 2026-11-24; not live**. Use `primary_metrics.csv`, `scenario_summary.csv`, and `time_categories.csv` for the table above; use `request_latency.svg` only as a descriptive local timing plot, not a speedup claim. The C01 Mermaid diagrams can explain the system if the live flow is unavailable, but are draft visuals, not captured runtime output. No approved terminal transcript or screenshot bundle is present in the repository.
+Switch to the approved published files in [`results/published/a07-20261124/`](../../results/published/a07-20261124/) and label every displayed table or figure **RECORDED OUTPUT — A07/G3 approved, 2026-11-24; not live**. Use `primary_metrics.csv`, `scenario_summary.csv`, and `time_categories.csv` for the table above; use `request_latency.svg` only as a descriptive local timing plot, not a speedup claim. Optional E11–E12 slides use [`summary.csv`](../../results/published/extension/summary.csv). The C03 Mermaid diagrams can explain the system if the live flow is unavailable, but are editable simulator diagrams, not captured runtime output. No approved terminal transcript or screenshot bundle is present in the repository.
+
+## Evidence/source record for C03
+
+- Core: `results/published/a07-20261124/manifest.json`, G3 main `3845f42d983e6f741b47bf212c227f26b12efc9d`, producing runner/analyzer commit `636ba23f066b082eccc1d590e17f62608b2bd626`.
+- Scientific approval: `docs/report/content/lead/approval.md` and `docs/report/content/lead/discussion-and-conclusions.md`.
+- Optional extension: `results/published/extension/manifest.json`, producing runner commit `34a20a554d1fe0c625d24ace746b48960783653f`.
+- Diagram sources: `docs/diagrams/architecture.mmd`, `normal-authentication.mmd`, and `replay-cache-comparison.mmd`.
+- No external graphics, screenshots, or licensed third-party assets are used.
